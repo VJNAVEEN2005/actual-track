@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Actual Track — Local-First Expense &amp; Budget Tracker</title>
+  <meta name="description" content="Take control of your finances with zero-based envelope budgeting. A privacy-first, local-only expense tracker for Windows, mobile, and web." />
+  <link rel="icon" href="app_icon.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════ NAV ═══════════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="nav-brand">
+        <img src="app_icon.jpg" alt="Actual Track" class="nav-logo" />
+        <span>Actual Track</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#app-preview">Preview</a></li>
+        <li><a href="#ai-advisor">AI Advisor</a></li>
+        <li><a href="#download" class="btn btn-nav">Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <header class="hero" id="hero">
+    <canvas id="heroCanvas" class="hero-canvas"></canvas>
+    <div class="hero-gradient"></div>
+    <div class="container hero-inner">
+      <div class="hero-text reveal">
+        <div class="hero-badge">v1.0.0 · Free &amp; Open Source</div>
+        <h1>Take control of your finances with <span class="text-gradient">zero-based envelope budgeting</span></h1>
+        <p class="hero-sub">Actual Track is a privacy-first, local-only expense &amp; budget tracker. No cloud. No subscription. Your money data stays on <em>your</em> device.</p>
+        <div class="hero-ctas">
+          <a href="downloads/ActualTrackSetup.exe" class="btn btn-primary btn-lg" download>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Windows Installer
+            <small>14.5 MB · .exe</small>
+          </a>
+          <a href="downloads/ActualTrack-Windows-Portable.zip" class="btn btn-outline btn-lg" download>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 21V7m8 14V7"/></svg>
+            Portable ZIP
+            <small>14.4 MB · No install</small>
+          </a>
+          <a href="#demo-video" class="btn btn-outline btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16" fill="currentColor"/></svg>
+            Watch Demo
+            <small>Interactive Video</small>
+          </a>
+        </div>
+        <p class="hero-platforms">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.5l9.9-1.4v9.6H0zm11.1-1.5L24 0v11.7H11.1zM0 12.3h9.9v9.6L0 20.5zm11.1-.6H24V24l-12.9-1.8z"/></svg>
+          Windows 10+ &nbsp;·&nbsp; Flutter Desktop
+        </p>
+      </div>
+      <div class="hero-mockup reveal reveal-right">
+        <div class="mockup-window">
+          <div class="mockup-titlebar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="titlebar-text">Actual Track — Dashboard</span>
+          </div>
+          <div class="mockup-body">
+            <!-- KPI row -->
+            <div class="m-kpi-row">
+              <div class="m-kpi emerald"><span class="m-kpi-label">Income</span><span class="m-kpi-val">$5,240</span></div>
+              <div class="m-kpi coral"><span class="m-kpi-label">Expenses</span><span class="m-kpi-val">$3,128</span></div>
+              <div class="m-kpi cobalt"><span class="m-kpi-label">Balance</span><span class="m-kpi-val">$2,112</span></div>
+              <div class="m-kpi violet"><span class="m-kpi-label">Free to Budget</span><span class="m-kpi-val">$890</span></div>
+            </div>
+            <!-- Chart area -->
+            <div class="m-chart">
+              <svg viewBox="0 0 320 100" class="m-chart-svg">
+                <defs>
+                  <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#10B981" stop-opacity=".35"/>
+                    <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,80 C40,70 60,30 100,45 S160,20 200,35 S260,55 320,25 L320,100 L0,100Z" fill="url(#cg)"/>
+                <path d="M0,80 C40,70 60,30 100,45 S160,20 200,35 S260,55 320,25" fill="none" stroke="#059669" stroke-width="2.5"/>
+              </svg>
+              <span class="m-chart-title">Cash Flow — Oct 2026</span>
+            </div>
+            <!-- Envelope cards -->
+            <div class="m-envelopes">
+              <div class="m-env"><span class="m-env-name">🏠 Rent</span><div class="m-env-bar"><div class="m-env-fill" style="width:100%;background:#059669"></div></div><span class="m-env-amt">$1,200 / $1,200</span></div>
+              <div class="m-env"><span class="m-env-name">🛒 Groceries</span><div class="m-env-bar"><div class="m-env-fill" style="width:68%;background:#2563EB"></div></div><span class="m-env-amt">$340 / $500</span></div>
+              <div class="m-env"><span class="m-env-name">⚡ Utilities</span><div class="m-env-bar"><div class="m-env-fill" style="width:45%;background:#7C3AED"></div></div><span class="m-env-amt">$90 / $200</span></div>
+              <div class="m-env"><span class="m-env-name">🎮 Entertainment</span><div class="m-env-bar"><div class="m-env-fill" style="width:85%;background:#D97706"></div></div><span class="m-env-amt">$170 / $200</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M0,60 C360,100 720,0 1080,60 S1440,30 1440,30 L1440,100 L0,100Z" fill="#F8FAFC"/></svg>
+    </div>
+  </header>
+
+  <!-- ═══════════════════ FEATURES ═══════════════════ -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Features</span>
+        <h2>Everything you need to master your money</h2>
+        <p>Eight powerful modules, one beautifully simple app.</p>
+      </div>
+      <div class="features-grid">
+        <!-- 1 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon emerald-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><path d="M12 4v16"/></svg>
+          </div>
+          <h3>Zero-Based Envelope Budgeting</h3>
+          <p>"Give every dollar a job" allocation with a real-time <strong>Free to Budget</strong> KPI so you always know what's left.</p>
+        </div>
+        <!-- 2 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon cobalt-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 21V3m8 0v18"/><path d="M2 9h6m8 0h6"/></svg>
+          </div>
+          <h3>Responsive Desktop &amp; Mobile</h3>
+          <p>Desktop sidebar navigation, mobile bottom dock, and a 4-metric KPI banner that adapts to every screen.</p>
+        </div>
+        <!-- 3 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon violet-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+          </div>
+          <h3>Local-First SQLite Engine</h3>
+          <p>Cross-platform SQLite with zero network latency. Your financial data never leaves your device.</p>
+        </div>
+        <!-- 4 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon amber-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          </div>
+          <h3>Spending Analytics &amp; Visuals</h3>
+          <p>Smooth cash flow spline charts, interactive donut breakdowns, and category-level spending insights.</p>
+        </div>
+        <!-- 5 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon cobalt-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/><circle cx="17" cy="16" r="2"/></svg>
+          </div>
+          <h3>Multi-Account Liquidity</h3>
+          <p>Checking, savings, investment, credit, and cash wallets with automatic reconciliation.</p>
+        </div>
+        <!-- 6 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon emerald-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+          </div>
+          <h3>AI Financial Advisor</h3>
+          <p>Gemini-powered chat with voice input &amp; TTS. Supports 3.8 Flash, 2.5 Flash/Pro, and 2.0 Flash models.</p>
+        </div>
+        <!-- 7 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon coral-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+          </div>
+          <h3>Financial Calendar &amp; Schedules</h3>
+          <p>Recurring bills, payday forecasts, and monthly ledger dates so you never miss a payment.</p>
+        </div>
+        <!-- 8 -->
+        <div class="feature-card reveal">
+          <div class="feature-icon violet-bg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h3>Settings &amp; Customization</h3>
+          <p>API key config, model selection, voice settings, and full data import/export for total control.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">How It Works</span>
+        <h2>Up and running in three steps</h2>
+        <p>No sign-up. No cloud. Just download and go.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-number">1</div>
+          <div class="step-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <h3>Download &amp; Install</h3>
+          <p>Grab the installer or portable ZIP. No account needed — runs entirely offline.</p>
+        </div>
+        <div class="step-connector reveal">
+          <svg width="80" height="24" viewBox="0 0 80 24"><path d="M0,12 L70,12" stroke="#D1FAE5" stroke-width="3" stroke-dasharray="6,4"/><polygon points="70,6 80,12 70,18" fill="#10B981"/></svg>
+        </div>
+        <div class="step reveal">
+          <div class="step-number">2</div>
+          <div class="step-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/><circle cx="17" cy="16" r="2"/></svg>
+          </div>
+          <h3>Set Up Accounts</h3>
+          <p>Add your bank accounts, cash wallets, and credit cards. Organize with custom categories.</p>
+        </div>
+        <div class="step-connector reveal">
+          <svg width="80" height="24" viewBox="0 0 80 24"><path d="M0,12 L70,12" stroke="#DBEAFE" stroke-width="3" stroke-dasharray="6,4"/><polygon points="70,6 80,12 70,18" fill="#2563EB"/></svg>
+        </div>
+        <div class="step reveal">
+          <div class="step-number">3</div>
+          <div class="step-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="1.5"><path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+          </div>
+          <h3>Start Budgeting</h3>
+          <p>Assign every dollar to an envelope, track spending, and let AI guide your financial decisions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ APP PREVIEW ═══════════════════ -->
+  <section class="app-preview" id="app-preview">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">App Preview</span>
+        <h2>Beautiful, functional, private</h2>
+        <p>A glimpse of the Snow &amp; Emerald interface.</p>
+      </div>
+
+      <!-- Interactive SaaS Demo Video -->
+      <div class="demo-video-wrapper reveal" id="demo-video">
+        <div class="demo-video-card">
+          <div class="demo-video-topbar">
+            <div class="demo-video-dots">
+              <span class="demo-video-dot red"></span>
+              <span class="demo-video-dot yellow"></span>
+              <span class="demo-video-dot green"></span>
+            </div>
+            <div class="demo-video-title">
+              <span>Actual Track — Product Walkthrough</span>
+              <span class="demo-video-badge">Interactive SaaS Demo</span>
+            </div>
+            <div class="demo-video-actions">
+              <a href="demo-video.html" target="_blank" rel="noopener" title="Open in new window">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                <span>Full Window</span>
+              </a>
+            </div>
+          </div>
+          <div class="demo-video-frame">
+            <iframe src="demo-video.html" title="Actual Track Interactive SaaS Demo Video" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- CSS Mock Screens -->
+      <div class="preview-grid">
+        <!-- Screen 1: Dashboard -->
+        <div class="preview-card reveal">
+          <div class="preview-label">Dashboard</div>
+          <div class="preview-screen">
+            <div class="ps-sidebar">
+              <div class="ps-logo-area">
+                <div class="ps-logo-dot"></div>
+                <span>AT</span>
+              </div>
+              <div class="ps-nav-item active"><span class="ps-nav-icon">📊</span>Dashboard</div>
+              <div class="ps-nav-item"><span class="ps-nav-icon">💰</span>Budgets</div>
+              <div class="ps-nav-item"><span class="ps-nav-icon">📋</span>Transactions</div>
+              <div class="ps-nav-item"><span class="ps-nav-icon">🏦</span>Accounts</div>
+              <div class="ps-nav-item"><span class="ps-nav-icon">📅</span>Calendar</div>
+              <div class="ps-nav-item"><span class="ps-nav-icon">🤖</span>AI Advisor</div>
+            </div>
+            <div class="ps-main">
+              <div class="ps-kpi-row">
+                <div class="ps-kpi" style="border-left:3px solid #059669"><div class="ps-kpi-l">Income</div><div class="ps-kpi-v" style="color:#059669">$5,240</div></div>
+                <div class="ps-kpi" style="border-left:3px solid #F43F5E"><div class="ps-kpi-l">Expenses</div><div class="ps-kpi-v" style="color:#F43F5E">$3,128</div></div>
+                <div class="ps-kpi" style="border-left:3px solid #2563EB"><div class="ps-kpi-l">Balance</div><div class="ps-kpi-v" style="color:#2563EB">$2,112</div></div>
+                <div class="ps-kpi" style="border-left:3px solid #7C3AED"><div class="ps-kpi-l">Free to Budget</div><div class="ps-kpi-v" style="color:#7C3AED">$890</div></div>
+              </div>
+              <div class="ps-chart-area">
+                <div class="ps-chart-title">Cash Flow</div>
+                <svg viewBox="0 0 280 70" class="ps-chart-svg">
+                  <defs><linearGradient id="pcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10B981" stop-opacity=".3"/><stop offset="100%" stop-color="#10B981" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0,55 C30,50 50,20 80,30 S130,10 170,25 S220,40 280,15 L280,70 L0,70Z" fill="url(#pcg)"/>
+                  <path d="M0,55 C30,50 50,20 80,30 S130,10 170,25 S220,40 280,15" fill="none" stroke="#059669" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="ps-txn-list">
+                <div class="ps-txn"><span class="ps-txn-cat" style="background:#D1FAE5;color:#059669">🛒</span><div class="ps-txn-info"><strong>Grocery Store</strong><small>Oct 18</small></div><span class="ps-txn-amt neg">-$64.30</span></div>
+                <div class="ps-txn"><span class="ps-txn-cat" style="background:#DBEAFE;color:#2563EB">💼</span><div class="ps-txn-info"><strong>Salary Deposit</strong><small>Oct 15</small></div><span class="ps-txn-amt pos">+$2,620</span></div>
+                <div class="ps-txn"><span class="ps-txn-cat" style="background:#EDE9FE;color:#7C3AED">🎬</span><div class="ps-txn-info"><strong>Netflix</strong><small>Oct 14</small></div><span class="ps-txn-amt neg">-$15.99</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 2: Envelopes -->
+        <div class="preview-card reveal">
+          <div class="preview-label">Envelope Budgets</div>
+          <div class="preview-screen screen-compact">
+            <div class="ps-header-bar">
+              <strong>Budgets — October 2026</strong>
+              <span class="ps-badge">4 Envelopes</span>
+            </div>
+            <div class="ps-free-budget">
+              <div class="ps-fb-label">Free to Budget</div>
+              <div class="ps-fb-amount">$890.00</div>
+              <div class="ps-fb-bar"><div class="ps-fb-fill" style="width:17%"></div></div>
+            </div>
+            <div class="ps-env-list">
+              <div class="ps-env-card">
+                <div class="ps-env-top"><span>🏠 Rent &amp; Housing</span><span class="ps-env-pct" style="color:#059669">100%</span></div>
+                <div class="ps-env-bar-wrap"><div class="ps-env-bar-fill" style="width:100%;background:linear-gradient(90deg,#059669,#10B981)"></div></div>
+                <div class="ps-env-bottom"><span>$1,200 spent</span><span>$1,200</span></div>
+              </div>
+              <div class="ps-env-card">
+                <div class="ps-env-top"><span>🛒 Groceries</span><span class="ps-env-pct" style="color:#2563EB">68%</span></div>
+                <div class="ps-env-bar-wrap"><div class="ps-env-bar-fill" style="width:68%;background:linear-gradient(90deg,#2563EB,#60A5FA)"></div></div>
+                <div class="ps-env-bottom"><span>$340 spent</span><span>$500</span></div>
+              </div>
+              <div class="ps-env-card">
+                <div class="ps-env-top"><span>🚗 Transportation</span><span class="ps-env-pct" style="color:#D97706">52%</span></div>
+                <div class="ps-env-bar-wrap"><div class="ps-env-bar-fill" style="width:52%;background:linear-gradient(90deg,#D97706,#FBBF24)"></div></div>
+                <div class="ps-env-bottom"><span>$156 spent</span><span>$300</span></div>
+              </div>
+              <div class="ps-env-card">
+                <div class="ps-env-top"><span>🎮 Entertainment</span><span class="ps-env-pct" style="color:#F43F5E">85%</span></div>
+                <div class="ps-env-bar-wrap"><div class="ps-env-bar-fill" style="width:85%;background:linear-gradient(90deg,#F43F5E,#FB7185)"></div></div>
+                <div class="ps-env-bottom"><span>$170 spent</span><span>$200</span></div>
+              </div>
+              <div class="ps-env-card">
+                <div class="ps-env-top"><span>⚡ Utilities</span><span class="ps-env-pct" style="color:#7C3AED">45%</span></div>
+                <div class="ps-env-bar-wrap"><div class="ps-env-bar-fill" style="width:45%;background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div>
+                <div class="ps-env-bottom"><span>$90 spent</span><span>$200</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 3: Analytics -->
+        <div class="preview-card reveal">
+          <div class="preview-label">Analytics</div>
+          <div class="preview-screen screen-compact">
+            <div class="ps-header-bar">
+              <strong>Spending Analytics</strong>
+              <span class="ps-badge">October</span>
+            </div>
+            <div class="ps-donut-area">
+              <svg viewBox="0 0 120 120" class="ps-donut-svg">
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="16"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#059669" stroke-width="16" stroke-dasharray="110 301.6" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#2563EB" stroke-width="16" stroke-dasharray="75 301.6" stroke-dashoffset="-110" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#7C3AED" stroke-width="16" stroke-dasharray="50 301.6" stroke-dashoffset="-185" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#D97706" stroke-width="16" stroke-dasharray="35 301.6" stroke-dashoffset="-235" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#F43F5E" stroke-width="16" stroke-dasharray="31.6 301.6" stroke-dashoffset="-270" transform="rotate(-90 60 60)"/>
+                <text x="60" y="56" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A">$3,128</text>
+                <text x="60" y="70" text-anchor="middle" font-size="7" fill="#475569">Total Spent</text>
+              </svg>
+              <div class="ps-donut-legend">
+                <span><i style="background:#059669"></i>Rent 38%</span>
+                <span><i style="background:#2563EB"></i>Grocery 25%</span>
+                <span><i style="background:#7C3AED"></i>Utilities 16%</span>
+                <span><i style="background:#D97706"></i>Transport 12%</span>
+                <span><i style="background:#F43F5E"></i>Fun 9%</span>
+              </div>
+            </div>
+            <div class="ps-bar-chart">
+              <div class="ps-bar-row"><span class="ps-bar-label">Rent</span><div class="ps-bar-track"><div class="ps-bar-fill" style="width:100%;background:#059669"></div></div><span class="ps-bar-val">$1,200</span></div>
+              <div class="ps-bar-row"><span class="ps-bar-label">Grocery</span><div class="ps-bar-track"><div class="ps-bar-fill" style="width:68%;background:#2563EB"></div></div><span class="ps-bar-val">$780</span></div>
+              <div class="ps-bar-row"><span class="ps-bar-label">Utilities</span><div class="ps-bar-track"><div class="ps-bar-fill" style="width:42%;background:#7C3AED"></div></div><span class="ps-bar-val">$498</span></div>
+              <div class="ps-bar-row"><span class="ps-bar-label">Transport</span><div class="ps-bar-track"><div class="ps-bar-fill" style="width:32%;background:#D97706"></div></div><span class="ps-bar-val">$380</span></div>
+              <div class="ps-bar-row"><span class="ps-bar-label">Fun</span><div class="ps-bar-track"><div class="ps-bar-fill" style="width:23%;background:#F43F5E"></div></div><span class="ps-bar-val">$270</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ AI ADVISOR ═══════════════════ -->
+  <section class="ai-advisor" id="ai-advisor">
+    <div class="container">
+      <div class="ai-inner">
+        <div class="ai-text reveal">
+          <span class="section-tag">AI-Powered</span>
+          <h2>Your personal AI financial advisor</h2>
+          <p>Chat with a Gemini-powered advisor that understands your budget, spending patterns, and financial goals. Get actionable insights in plain language — or even by voice.</p>
+          <ul class="ai-features">
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Supports Gemini 3.8 Flash, 2.5 Flash/Pro, 2.0 Flash
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Voice input &amp; text-to-speech responses
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Context-aware — reads your actual budget data
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Bring your own API key — no subscription
+            </li>
+          </ul>
+        </div>
+        <div class="ai-mockup reveal reveal-right">
+          <div class="ai-chat-window">
+            <div class="ai-chat-header">
+              <div class="ai-avatar">🤖</div>
+              <div><strong>AI Financial Advisor</strong><small>Gemini 2.5 Flash</small></div>
+            </div>
+            <div class="ai-chat-body">
+              <div class="ai-msg ai-msg-user">
+                <p>I overspent on entertainment this month. What should I do?</p>
+              </div>
+              <div class="ai-msg ai-msg-bot">
+                <p>You've spent <strong>$170 of your $200</strong> entertainment budget with 12 days left. I'd suggest:</p>
+                <ol>
+                  <li>Pause discretionary subscriptions</li>
+                  <li>Move $50 from your surplus Utilities envelope</li>
+                  <li>Set a $10/day spending cap for the rest of the month</li>
+                </ol>
+                <p>Want me to set up a daily spending reminder? 📊</p>
+              </div>
+              <div class="ai-msg ai-msg-user">
+                <p>Yes, please set that up!</p>
+              </div>
+              <div class="ai-msg ai-msg-bot typing">
+                <span class="dot-typing"><span></span><span></span><span></span></span>
+              </div>
+            </div>
+            <div class="ai-chat-input">
+              <span class="ai-mic">🎤</span>
+              <span>Ask your financial advisor...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ DOWNLOAD ═══════════════════ -->
+  <section class="download" id="download">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Download</span>
+        <h2>Get Actual Track for free</h2>
+        <p>No sign-up, no cloud, no subscription. Forever free.</p>
+      </div>
+      <div class="download-cards">
+        <div class="dl-card reveal">
+          <div class="dl-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <h3>Windows Installer</h3>
+          <p class="dl-size">14.5 MB · .exe</p>
+          <p>Standard installation with Start Menu shortcut and auto-updates.</p>
+          <a href="downloads/ActualTrackSetup.exe" class="btn btn-primary btn-block" download>Download Installer</a>
+        </div>
+        <div class="dl-card reveal">
+          <div class="dl-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 21V7m8 14V7"/></svg>
+          </div>
+          <h3>Portable ZIP</h3>
+          <p class="dl-size">14.4 MB · .zip</p>
+          <p>No installation needed. Extract and run — perfect for USB drives.</p>
+          <a href="downloads/ActualTrack-Windows-Portable.zip" class="btn btn-outline btn-block" download>Download Portable</a>
+        </div>
+      </div>
+      <div class="sys-req reveal">
+        <h4>System Requirements</h4>
+        <div class="sys-req-grid">
+          <div><strong>OS</strong><span>Windows 10 or later (64-bit)</span></div>
+          <div><strong>RAM</strong><span>4 GB minimum</span></div>
+          <div><strong>Disk</strong><span>~50 MB free space</span></div>
+          <div><strong>Runtime</strong><span>No additional runtime needed</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="app_icon.jpg" alt="Actual Track" class="footer-logo" />
+        <div>
+          <strong>Actual Track</strong>
+          <small>v1.0.0 · Built with Flutter</small>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#app-preview">Preview</a>
+        <a href="#download">Download</a>
+        <a href="https://github.com/VJNAVEEN2005/actual-track" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Actual Track. All rights reserved. Released under the MIT License.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

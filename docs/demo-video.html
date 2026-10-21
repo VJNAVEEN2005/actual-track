@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actual Track — Demo Video</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ── Reset & Base ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --emerald: #059669;
+  --emerald-accent: #10B981;
+  --emerald-light: #D1FAE5;
+  --cobalt: #2563EB;
+  --cobalt-light: #DBEAFE;
+  --violet: #7C3AED;
+  --violet-light: #EDE9FE;
+  --coral: #F43F5E;
+  --coral-light: #FFE4E6;
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --text: #0F172A;
+  --text-muted: #475569;
+  --text-light: #94A3B8;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-xl: 0 24px 60px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+}
+
+body {
+  font-family: 'Inter', 'Poppins', system-ui, sans-serif;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--text);
+}
+
+/* ── Video Container ── */
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1280px;
+  max-height: 720px;
+  aspect-ratio: 16/9;
+  background: var(--bg);
+  overflow: hidden;
+  border-radius: 0;
+  box-shadow: 0 0 80px rgba(16, 185, 129, 0.15);
+}
+
+/* ── Ambient Background ── */
+.ambient-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.ambient-orb:nth-child(1) { width: 400px; height: 400px; background: var(--emerald-accent); top: -100px; left: -100px; animation-delay: 0s; }
+.ambient-orb:nth-child(2) { width: 350px; height: 350px; background: var(--cobalt); bottom: -80px; right: -60px; animation-delay: -5s; }
+.ambient-orb:nth-child(3) { width: 300px; height: 300px; background: var(--violet); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
+.ambient-orb:nth-child(4) { width: 250px; height: 250px; background: var(--coral); top: -50px; right: 30%; animation-delay: -15s; }
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.1); }
+  50% { transform: translate(-20px, 30px) scale(0.9); }
+  75% { transform: translate(20px, 20px) scale(1.05); }
+}
+
+/* ── Floating Particles ── */
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: var(--emerald-accent);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat 8s ease-in-out infinite;
+}
+@keyframes particleFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  20% { opacity: 0.6; transform: translateY(-40px) scale(1); }
+  80% { opacity: 0.3; transform: translateY(-200px) scale(0.5); }
+  100% { opacity: 0; transform: translateY(-300px) scale(0); }
+}
+
+/* ── Grid Pattern Overlay ── */
+.grid-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(5,150,105,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(5,150,105,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Scenes ── */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+  z-index: 1;
+  padding: 40px 60px;
+  pointer-events: none;
+}
+.scene.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* ── Scene Label ── */
+.scene-label {
+  position: absolute;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--emerald);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.6s 0.5s;
+}
+.scene.active .scene-label { opacity: 1; }
+
+/* ══════════════════════════════════════
+   SCENE 1 — TITLE
+   ══════════════════════════════════════ */
+.s1-content { text-align: center; }
+
+.s1-icon {
+  width: 88px; height: 88px;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-accent));
+  border-radius: 22px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 28px;
+  box-shadow: 0 8px 32px rgba(5,150,105,0.3);
+  opacity: 0;
+  transform: translateY(30px) scale(0.8);
+  transition: all 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.2s;
+}
+.scene.active .s1-icon { opacity: 1; transform: translateY(0) scale(1); }
+
+.s1-icon svg { width: 44px; height: 44px; fill: white; }
+
+.s1-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-accent), var(--cobalt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s ease 0.4s;
+}
+.scene.active .s1-title { opacity: 1; transform: translateY(0); }
+
+.s1-subtitle {
+  font-size: 20px;
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-top: 10px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s ease 0.6s;
+}
+.scene.active .s1-subtitle { opacity: 1; transform: translateY(0); }
+
+.s1-tagline {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 28px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s ease 0.9s;
+}
+.scene.active .s1-tagline { opacity: 1; transform: translateY(0); }
+
+.s1-tagline span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--emerald);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.s1-tagline .dot {
+  width: 5px; height: 5px;
+  background: var(--emerald-accent);
+  border-radius: 50%;
+}
+
+/* ══════════════════════════════════════
+   SCENE 2 — DASHBOARD
+   ══════════════════════════════════════ */
+.s2-content { width: 100%; max-width: 1000px; }
+
+.s2-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.s2-kpi {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 18px 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(0,0,0,0.04);
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.scene.active .s2-kpi:nth-child(1) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+.scene.active .s2-kpi:nth-child(2) { transition-delay: 0.35s; opacity: 1; transform: translateY(0); }
+.scene.active .s2-kpi:nth-child(3) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+.scene.active .s2-kpi:nth-child(4) { transition-delay: 0.65s; opacity: 1; transform: translateY(0); }
+
+.s2-kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+.s2-kpi-value {
+  font-size: 24px;
+  font-weight: 800;
+  font-family: 'Poppins', sans-serif;
+}
+.s2-kpi:nth-child(1) .s2-kpi-value { color: var(--emerald); }
+.s2-kpi:nth-child(2) .s2-kpi-value { color: var(--cobalt); }
+.s2-kpi:nth-child(3) .s2-kpi-value { color: var(--coral); }
+.s2-kpi:nth-child(4) .s2-kpi-value { color: var(--violet); }
+
+.s2-kpi-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.s2-kpi-indicator.up { color: var(--emerald); }
+.s2-kpi-indicator.down { color: var(--coral); }
+
+.s2-accounts-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.s2-account {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.scene.active .s2-account:nth-child(1) { transition-delay: 1.0s; opacity: 1; transform: translateX(0); }
+.scene.active .s2-account:nth-child(2) { transition-delay: 1.15s; opacity: 1; transform: translateX(0); }
+.scene.active .s2-account:nth-child(3) { transition-delay: 1.3s; opacity: 1; transform: translateX(0); }
+
+.s2-account-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.s2-account:nth-child(1) .s2-account-icon { background: var(--emerald-light); }
+.s2-account:nth-child(2) .s2-account-icon { background: var(--cobalt-light); }
+.s2-account:nth-child(3) .s2-account-icon { background: var(--violet-light); }
+
+.s2-account-name { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.s2-account-balance { font-size: 18px; font-weight: 700; color: var(--text); }
+
+/* ══════════════════════════════════════
+   SCENE 3 — BUDGETING
+   ══════════════════════════════════════ */
+.s3-content { width: 100%; max-width: 600px; }
+
+.s3-header {
+  text-align: center;
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease 0.2s;
+}
+.scene.active .s3-header { opacity: 1; transform: translateY(0); }
+
+.s3-header h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.s3-header p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.s3-envelope {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.04);
+  opacity: 0;
+  transform: translateX(40px);
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.scene.active .s3-envelope:nth-child(1) { transition-delay: 0.4s; opacity: 1; transform: translateX(0); }
+.scene.active .s3-envelope:nth-child(2) { transition-delay: 0.55s; opacity: 1; transform: translateX(0); }
+.scene.active .s3-envelope:nth-child(3) { transition-delay: 0.7s; opacity: 1; transform: translateX(0); }
+.scene.active .s3-envelope:nth-child(4) { transition-delay: 0.85s; opacity: 1; transform: translateX(0); }
+.scene.active .s3-envelope:nth-child(5) { transition-delay: 1.0s; opacity: 1; transform: translateX(0); }
+
+.s3-envelope-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.s3-envelope-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.s3-envelope-amounts {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.s3-envelope-amounts strong {
+  color: var(--text);
+}
+.s3-bar-track {
+  height: 8px;
+  background: #F1F5F9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.s3-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.s3-bar-fill.green { background: linear-gradient(90deg, var(--emerald), var(--emerald-accent)); }
+.s3-bar-fill.red { background: linear-gradient(90deg, var(--coral), #FB7185); }
+
+.s3-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.s3-badge.over {
+  background: var(--coral-light);
+  color: var(--coral);
+}
+
+/* ══════════════════════════════════════
+   SCENE 4 — CASH FLOW
+   ══════════════════════════════════════ */
+.s4-content { width: 100%; max-width: 800px; text-align: center; }
+
+.s4-chart-container {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease 0.2s;
+}
+.scene.active .s4-chart-container { opacity: 1; transform: translateY(0); }
+
+.s4-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.s4-chart-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.s4-chart-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.s4-legend-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.s4-legend-dot.inflow { background: var(--emerald-accent); }
+.s4-legend-dot.outflow { background: var(--coral); }
+
+.s4-svg-chart { width: 100%; height: 240px; }
+
+.s4-chart-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.scene.active .s4-chart-line { stroke-dashoffset: 0; }
+
+.s4-chart-area {
+  opacity: 0;
+  transition: opacity 1.5s ease 1.2s;
+}
+.scene.active .s4-chart-area { opacity: 1; }
+
+.s4-surplus-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--emerald-light);
+  color: var(--emerald);
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 16px rgba(5,150,105,0.2);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1) 1.8s;
+}
+.scene.active .s4-surplus-badge { opacity: 1; transform: scale(1); }
+
+/* ══════════════════════════════════════
+   SCENE 5 — AI ADVISOR
+   ══════════════════════════════════════ */
+.s5-content { width: 100%; max-width: 580px; }
+
+.s5-chat-window {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.s5-chat-header {
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-accent));
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.2s;
+}
+.scene.active .s5-chat-header { opacity: 1; }
+
+.s5-chat-header-icon {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.s5-chat-header-text {
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+}
+.s5-chat-header-badge {
+  margin-left: auto;
+  background: rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+.s5-chat-body { padding: 20px; min-height: 260px; }
+
+.s5-msg {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  line-height: 1.55;
+  margin-bottom: 14px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.s5-msg-user {
+  background: var(--emerald-light);
+  color: var(--emerald);
+  font-weight: 500;
+  margin-left: auto;
+  border-bottom-right-radius: 4px;
+}
+.scene.active .s5-msg-user { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+
+.s5-typing {
+  display: flex;
+  gap: 5px;
+  padding: 14px 18px;
+  max-width: 70px;
+  opacity: 0;
+  transition: opacity 0.3s ease 1.2s;
+}
+.scene.active .s5-typing { opacity: 1; }
+.s5-typing-dot {
+  width: 8px; height: 8px;
+  background: var(--text-light);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite;
+}
+.s5-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.s5-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-8px); }
+}
+
+.s5-msg-ai {
+  background: #F1F5F9;
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+}
+.scene.active .s5-msg-ai { transition-delay: 2.0s; opacity: 1; transform: translateY(0); }
+
+.s5-gemini-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--violet);
+  background: var(--violet-light);
+  padding: 3px 10px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease 2.5s;
+}
+.scene.active .s5-gemini-badge { opacity: 1; }
+
+/* ══════════════════════════════════════
+   SCENE 6 — MULTI-PLATFORM
+   ══════════════════════════════════════ */
+.s6-content { text-align: center; width: 100%; max-width: 800px; }
+
+.s6-devices {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.s6-desktop {
+  width: 380px;
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: all 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.3s;
+}
+.scene.active .s6-desktop { opacity: 1; transform: translateX(0); }
+
+.s6-desktop-frame {
+  background: #1E293B;
+  border-radius: 10px 10px 0 0;
+  padding: 8px 12px 0;
+}
+.s6-desktop-dots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.s6-desktop-dots span {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.s6-desktop-dots span:nth-child(1) { background: #EF4444; }
+.s6-desktop-dots span:nth-child(2) { background: #F59E0B; }
+.s6-desktop-dots span:nth-child(3) { background: #10B981; }
+
+.s6-desktop-screen {
+  background: var(--bg);
+  height: 200px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.s6-desktop-bar {
+  height: 6px;
+  border-radius: 3px;
+}
+
+.s6-desktop-stand {
+  width: 80px;
+  height: 30px;
+  background: #CBD5E1;
+  margin: 0 auto;
+  border-radius: 0 0 4px 4px;
+}
+.s6-desktop-base {
+  width: 120px;
+  height: 6px;
+  background: #94A3B8;
+  margin: 0 auto;
+  border-radius: 3px;
+}
+
+.s6-phone {
+  width: 130px;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: all 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.5s;
+}
+.scene.active .s6-phone { opacity: 1; transform: translateX(0); }
+
+.s6-phone-frame {
+  background: #1E293B;
+  border-radius: 18px;
+  padding: 10px 8px;
+}
+.s6-phone-notch {
+  width: 50px;
+  height: 6px;
+  background: #0F172A;
+  border-radius: 3px;
+  margin: 0 auto 8px;
+}
+.s6-phone-screen {
+  background: var(--bg);
+  border-radius: 10px;
+  height: 200px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.s6-shield {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.8s;
+}
+.scene.active .s6-shield { opacity: 1; }
+
+.s6-badges {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.s6-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.05);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.scene.active .s6-badge:nth-child(1) { transition-delay: 1.2s; opacity: 1; transform: translateY(0); }
+.scene.active .s6-badge:nth-child(2) { transition-delay: 1.35s; opacity: 1; transform: translateY(0); }
+.scene.active .s6-badge:nth-child(3) { transition-delay: 1.5s; opacity: 1; transform: translateY(0); }
+.scene.active .s6-badge:nth-child(4) { transition-delay: 1.65s; opacity: 1; transform: translateY(0); }
+
+.s6-privacy-text {
+  margin-top: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.6s ease 1.8s;
+}
+.scene.active .s6-privacy-text { opacity: 1; transform: translateY(0); }
+.s6-privacy-text em {
+  color: var(--emerald);
+  font-style: normal;
+}
+
+/* ══════════════════════════════════════
+   SCENE 7 — CTA / OUTRO
+   ══════════════════════════════════════ */
+.s7-content { text-align: center; }
+
+.s7-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s ease 0.3s;
+}
+.scene.active .s7-heading { opacity: 1; transform: translateY(0); }
+
+.s7-subheading {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s ease 0.5s;
+}
+.scene.active .s7-subheading { opacity: 1; transform: translateY(0); }
+
+.s7-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.s7-btn {
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.s7-btn-primary {
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-accent));
+  color: white;
+  box-shadow: 0 6px 24px rgba(5,150,105,0.35);
+}
+.s7-btn-primary:hover { box-shadow: 0 8px 32px rgba(5,150,105,0.45); transform: translateY(-2px) !important; }
+.s7-btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid #E2E8F0;
+  box-shadow: var(--shadow-sm);
+}
+.s7-btn-secondary:hover { border-color: var(--emerald-accent); transform: translateY(-2px) !important; }
+.scene.active .s7-btn:nth-child(1) { transition-delay: 0.7s; opacity: 1; transform: translateY(0); }
+.scene.active .s7-btn:nth-child(2) { transition-delay: 0.85s; opacity: 1; transform: translateY(0); }
+
+.s7-logo-outro {
+  opacity: 0;
+  transition: opacity 1s ease 1.5s;
+}
+.scene.active .s7-logo-outro { opacity: 1; }
+.s7-logo-outro .s1-icon {
+  width: 60px; height: 60px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.34,1.56,0.64,1) 1.6s;
+}
+.scene.active .s7-logo-outro .s1-icon { opacity: 1; transform: translateY(0) scale(1); }
+.s7-logo-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--emerald);
+}
+
+/* ── Confetti ── */
+.confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -20px;
+  opacity: 0;
+}
+.scene.active .confetti-piece {
+  animation: confettiFall 3s ease forwards;
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(750px) rotate(720deg); }
+}
+
+/* ══════════════════════════════════════
+   CONTROLS
+   ══════════════════════════════════════ */
+.controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 20px 12px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 2px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--emerald), var(--emerald-accent));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.play-pause-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--emerald);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.play-pause-btn:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(5,150,105,0.4); }
+.play-pause-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+.scene-counter {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 40px;
+}
+
+.scene-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.scene-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #CBD5E1;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.scene-dot.active {
+  background: var(--emerald);
+  width: 24px;
+  border-radius: 4px;
+}
+.scene-dot:hover { background: var(--emerald-accent); }
+</style>
+</head>
+<body>
+
+<div class="video-container" id="videoContainer">
+  <!-- Ambient Background -->
+  <div class="ambient-bg">
+    <div class="ambient-orb"></div>
+    <div class="ambient-orb"></div>
+    <div class="ambient-orb"></div>
+    <div class="ambient-orb"></div>
+  </div>
+  <div class="grid-pattern"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- ═══ SCENE 1 — TITLE ═══ -->
+  <div class="scene active" data-scene="0" data-duration="4000">
+    <div class="s1-content">
+      <div class="s1-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95.49-7.4-2.96-6.93-6.93.34-2.89 2.67-5.22 5.56-5.56 3.97-.49 7.4 2.96 6.93 6.93-.34 2.89-2.67 5.22-5.56 5.56zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm2-5h-1V9h-2v2H9v2h2v2h2v-2h1v-2z"/></svg>
+      </div>
+      <h1 class="s1-title">Actual Track</h1>
+      <p class="s1-subtitle">Local-First Expense &amp; Budget Tracker</p>
+      <div class="s1-tagline">
+        <span>Privacy</span>
+        <div class="dot"></div>
+        <span>Simplicity</span>
+        <div class="dot"></div>
+        <span>Control</span>
+      </div>
+    </div>
+    <div class="scene-label">Welcome</div>
+  </div>
+
+  <!-- ═══ SCENE 2 — DASHBOARD ═══ -->
+  <div class="scene" data-scene="1" data-duration="5000">
+    <div class="s2-content">
+      <div class="s2-kpi-row">
+        <div class="s2-kpi">
+          <div class="s2-kpi-label">Spendable Liquidity</div>
+          <div class="s2-kpi-value">₹1,24,500</div>
+          <div class="s2-kpi-indicator up">▲ 8.2%</div>
+        </div>
+        <div class="s2-kpi">
+          <div class="s2-kpi-label">Monthly Inflow</div>
+          <div class="s2-kpi-value">₹85,000</div>
+          <div class="s2-kpi-indicator up">▲ 3.1%</div>
+        </div>
+        <div class="s2-kpi">
+          <div class="s2-kpi-label">Monthly Outflow</div>
+          <div class="s2-kpi-value">₹47,200</div>
+          <div class="s2-kpi-indicator down">▲ 5.4%</div>
+        </div>
+        <div class="s2-kpi">
+          <div class="s2-kpi-label">Free to Budget</div>
+          <div class="s2-kpi-value">₹12,300</div>
+          <div class="s2-kpi-indicator up">▲ 12.7%</div>
+        </div>
+      </div>
+      <div class="s2-accounts-row">
+        <div class="s2-account">
+          <div class="s2-account-icon">🏦</div>
+          <div>
+            <div class="s2-account-name">Checking</div>
+            <div class="s2-account-balance">₹45,200</div>
+          </div>
+        </div>
+        <div class="s2-account">
+          <div class="s2-account-icon">💰</div>
+          <div>
+            <div class="s2-account-name">Savings</div>
+            <div class="s2-account-balance">₹67,800</div>
+          </div>
+        </div>
+        <div class="s2-account">
+          <div class="s2-account-icon">📈</div>
+          <div>
+            <div class="s2-account-name">Investment</div>
+            <div class="s2-account-balance">₹11,500</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scene-label">Your Financial Command Center</div>
+  </div>
+
+  <!-- ═══ SCENE 3 — BUDGETING ═══ -->
+  <div class="scene" data-scene="2" data-duration="5000">
+    <div class="s3-content">
+      <div class="s3-header">
+        <h2>Zero-Based Budgeting</h2>
+        <p>Give Every Rupee a Job</p>
+      </div>
+      <div class="s3-envelopes" id="envelopes">
+        <div class="s3-envelope">
+          <div class="s3-envelope-top">
+            <div class="s3-envelope-name">🏠 Rent</div>
+            <div class="s3-envelope-amounts"><strong>₹15,000</strong> / ₹15,000</div>
+          </div>
+          <div class="s3-bar-track"><div class="s3-bar-fill green" data-width="100"></div></div>
+        </div>
+        <div class="s3-envelope">
+          <div class="s3-envelope-top">
+            <div class="s3-envelope-name">🛒 Groceries</div>
+            <div class="s3-envelope-amounts"><strong>₹4,200</strong> / ₹6,000</div>
+          </div>
+          <div class="s3-bar-track"><div class="s3-bar-fill green" data-width="70"></div></div>
+        </div>
+        <div class="s3-envelope">
+          <div class="s3-envelope-top">
+            <div class="s3-envelope-name">
+              🚗 Transport
+              <span class="s3-badge over">⚠ OVER</span>
+            </div>
+            <div class="s3-envelope-amounts"><strong>₹3,800</strong> / ₹3,000</div>
+          </div>
+          <div class="s3-bar-track"><div class="s3-bar-fill red" data-width="100"></div></div>
+        </div>
+        <div class="s3-envelope">
+          <div class="s3-envelope-top">
+            <div class="s3-envelope-name">💊 Health</div>
+            <div class="s3-envelope-amounts"><strong>₹800</strong> / ₹2,000</div>
+          </div>
+          <div class="s3-bar-track"><div class="s3-bar-fill green" data-width="40"></div></div>
+        </div>
+        <div class="s3-envelope">
+          <div class="s3-envelope-top">
+            <div class="s3-envelope-name">🎭 Entertainment</div>
+            <div class="s3-envelope-amounts"><strong>₹2,400</strong> / ₹4,000</div>
+          </div>
+          <div class="s3-bar-track"><div class="s3-bar-fill green" data-width="60"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="scene-label">Give Every Rupee a Job</div>
+  </div>
+
+  <!-- ═══ SCENE 4 — CASH FLOW ═══ -->
+  <div class="scene" data-scene="3" data-duration="5000">
+    <div class="s4-content">
+      <div class="s4-chart-container">
+        <div class="s4-chart-header">
+          <div class="s4-chart-title">Cash Flow — Last 5 Weeks</div>
+          <div class="s4-chart-legend">
+            <span><span class="s4-legend-dot inflow"></span>Inflow</span>
+            <span><span class="s4-legend-dot outflow"></span>Outflow</span>
+          </div>
+        </div>
+        <svg class="s4-svg-chart" viewBox="0 0 700 220" preserveAspectRatio="xMidYMid meet">
+          <!-- Grid lines -->
+          <line x1="60" y1="20" x2="60" y2="200" stroke="#E2E8F0" stroke-width="1"/>
+          <line x1="60" y1="200" x2="680" y2="200" stroke="#E2E8F0" stroke-width="1"/>
+          <line x1="60" y1="155" x2="680" y2="155" stroke="#F1F5F9" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="60" y1="110" x2="680" y2="110" stroke="#F1F5F9" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="60" y1="65" x2="680" y2="65" stroke="#F1F5F9" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="60" y1="20" x2="680" y2="20" stroke="#F1F5F9" stroke-width="1" stroke-dasharray="4"/>
+
+          <!-- Y axis labels -->
+          <text x="50" y="203" text-anchor="end" fill="#94A3B8" font-size="11" font-family="Inter">₹0</text>
+          <text x="50" y="158" text-anchor="end" fill="#94A3B8" font-size="11" font-family="Inter">₹25K</text>
+          <text x="50" y="113" text-anchor="end" fill="#94A3B8" font-size="11" font-family="Inter">₹50K</text>
+          <text x="50" y="68" text-anchor="end" fill="#94A3B8" font-size="11" font-family="Inter">₹75K</text>
+          <text x="50" y="23" text-anchor="end" fill="#94A3B8" font-size="11" font-family="Inter">₹100K</text>
+
+          <!-- X axis labels -->
+          <text x="120" y="218" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="Inter">W1</text>
+          <text x="260" y="218" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="Inter">W2</text>
+          <text x="400" y="218" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="Inter">W3</text>
+          <text x="540" y="218" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="Inter">W4</text>
+          <text x="660" y="218" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="Inter">W5</text>
+
+          <!-- Inflow area -->
+          <path class="s4-chart-area" d="M120,130 L260,90 L400,75 L540,55 L660,40 L660,200 L120,200 Z" fill="url(#inflowGrad)" opacity="0.3"/>
+          <!-- Outflow area -->
+          <path class="s4-chart-area" d="M120,170 L260,160 L400,145 L540,155 L660,140 L660,200 L120,200 Z" fill="url(#outflowGrad)" opacity="0.3"/>
+
+          <!-- Inflow line -->
+          <polyline class="s4-chart-line" points="120,130 260,90 400,75 540,55 660,40" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Outflow line -->
+          <polyline class="s4-chart-line" points="120,170 260,160 400,145 540,155 660,140" fill="none" stroke="#F43F5E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="transition-delay: 0.3s"/>
+
+          <!-- Data points - Inflow -->
+          <circle cx="120" cy="130" r="5" fill="#10B981" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="260" cy="90" r="5" fill="#10B981" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="400" cy="75" r="5" fill="#10B981" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="540" cy="55" r="5" fill="#10B981" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="660" cy="40" r="5" fill="#10B981" stroke="white" stroke-width="2" class="s4-chart-area"/>
+
+          <!-- Data points - Outflow -->
+          <circle cx="120" cy="170" r="5" fill="#F43F5E" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="260" cy="160" r="5" fill="#F43F5E" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="400" cy="145" r="5" fill="#F43F5E" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="540" cy="155" r="5" fill="#F43F5E" stroke="white" stroke-width="2" class="s4-chart-area"/>
+          <circle cx="660" cy="140" r="5" fill="#F43F5E" stroke="white" stroke-width="2" class="s4-chart-area"/>
+
+          <defs>
+            <linearGradient id="inflowGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#10B981" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="outflowGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F43F5E" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#F43F5E" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="s4-surplus-badge">
+        <span>↗</span> +₹37,800 Net Surplus
+      </div>
+    </div>
+    <div class="scene-label">Track Your Cash Flow Trajectory</div>
+  </div>
+
+  <!-- ═══ SCENE 5 — AI ADVISOR ═══ -->
+  <div class="scene" data-scene="4" data-duration="5000">
+    <div class="s5-content">
+      <div class="s5-chat-window">
+        <div class="s5-chat-header">
+          <div class="s5-chat-header-icon">🤖</div>
+          <div class="s5-chat-header-text">Financial Advisor AI</div>
+          <div class="s5-chat-header-badge">GEMINI</div>
+        </div>
+        <div class="s5-chat-body">
+          <div class="s5-msg s5-msg-user">How can I reduce my food spending?</div>
+          <div class="s5-typing" id="typingIndicator">
+            <div class="s5-typing-dot"></div>
+            <div class="s5-typing-dot"></div>
+            <div class="s5-typing-dot"></div>
+          </div>
+          <div class="s5-msg s5-msg-ai">Based on your spending patterns, you're spending 23% more on dining out compared to last month. I suggest setting a weekly dining budget of ₹1,500 and cooking more at home. This could save you <strong>₹3,200/month</strong>.</div>
+          <div class="s5-gemini-badge">✨ Powered by Gemini</div>
+        </div>
+      </div>
+    </div>
+    <div class="scene-label">AI-Powered Financial Guidance</div>
+  </div>
+
+  <!-- ═══ SCENE 6 — MULTI-PLATFORM ═══ -->
+  <div class="scene" data-scene="5" data-duration="4000">
+    <div class="s6-content">
+      <div class="s6-devices" style="position: relative;">
+        <div class="s6-desktop">
+          <div class="s6-desktop-frame">
+            <div class="s6-desktop-dots"><span></span><span></span><span></span></div>
+            <div class="s6-desktop-screen">
+              <div class="s6-desktop-bar" style="width:60%;height:8px;background:var(--emerald-light);border-radius:4px"></div>
+              <div style="display:flex;gap:6px;margin-top:4px">
+                <div style="flex:1;height:40px;background:var(--emerald-light);border-radius:6px"></div>
+                <div style="flex:1;height:40px;background:var(--cobalt-light);border-radius:6px"></div>
+                <div style="flex:1;height:40px;background:var(--violet-light);border-radius:6px"></div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:4px">
+                <div style="flex:2;height:80px;background:#F1F5F9;border-radius:6px"></div>
+                <div style="flex:1;height:80px;background:#F1F5F9;border-radius:6px"></div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:4px">
+                <div style="flex:1;height:6px;background:var(--emerald-light);border-radius:3px"></div>
+                <div style="flex:1;height:6px;background:var(--coral-light);border-radius:3px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="s6-desktop-stand"></div>
+          <div class="s6-desktop-base"></div>
+        </div>
+        <div class="s6-phone">
+          <div class="s6-phone-frame">
+            <div class="s6-phone-notch"></div>
+            <div class="s6-phone-screen">
+              <div style="height:8px;width:70%;background:var(--emerald-light);border-radius:4px"></div>
+              <div style="display:flex;gap:4px;margin-top:4px">
+                <div style="flex:1;height:30px;background:var(--emerald-light);border-radius:6px"></div>
+                <div style="flex:1;height:30px;background:var(--cobalt-light);border-radius:6px"></div>
+              </div>
+              <div style="height:60px;background:#F1F5F9;border-radius:6px;margin-top:4px"></div>
+              <div style="display:flex;gap:4px;margin-top:4px">
+                <div style="flex:1;height:6px;background:var(--emerald-light);border-radius:3px"></div>
+                <div style="flex:1;height:6px;background:var(--violet-light);border-radius:3px"></div>
+              </div>
+              <div style="height:40px;background:#F1F5F9;border-radius:6px;margin-top:4px"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Shield -->
+        <div class="s6-shield">
+          <svg viewBox="0 0 64 64" width="60" height="60">
+            <defs>
+              <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#059669"/>
+                <stop offset="100%" stop-color="#10B981"/>
+              </linearGradient>
+            </defs>
+            <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="url(#shieldGrad)" opacity="0.15"/>
+            <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="none" stroke="url(#shieldGrad)" stroke-width="2.5"/>
+            <path d="M26 32l4 4 8-8" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="s6-badges">
+        <div class="s6-badge">🔒 Local SQLite</div>
+        <div class="s6-badge">🖥️ Desktop</div>
+        <div class="s6-badge">📱 Mobile</div>
+        <div class="s6-badge">🌐 Web</div>
+      </div>
+      <div class="s6-privacy-text">Your data stays on <em>YOUR</em> device</div>
+    </div>
+    <div class="scene-label">Privacy by Design</div>
+  </div>
+
+  <!-- ═══ SCENE 7 — CTA ═══ -->
+  <div class="scene" data-scene="6" data-duration="4000">
+    <div class="confetti-container" id="confettiContainer"></div>
+    <div class="s7-content">
+      <h2 class="s7-heading">Start Your Financial Journey Today</h2>
+      <p class="s7-subheading">Download Free for Windows</p>
+      <div class="s7-buttons">
+        <button class="s7-btn s7-btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          Download Installer
+        </button>
+        <button class="s7-btn s7-btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+          Portable ZIP
+        </button>
+      </div>
+      <div class="s7-logo-outro">
+        <div class="s1-icon" style="width:52px;height:52px;border-radius:14px">
+          <svg viewBox="0 0 24 24" style="width:28px;height:28px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95.49-7.4-2.96-6.93-6.93.34-2.89 2.67-5.22 5.56-5.56 3.97-.49 7.4 2.96 6.93 6.93-.34 2.89-2.67 5.22-5.56 5.56zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm2-5h-1V9h-2v2H9v2h2v2h2v-2h1v-2z"/></svg>
+        </div>
+        <div class="s7-logo-text">Actual Track</div>
+      </div>
+    </div>
+    <div class="scene-label">Your Journey Starts Now</div>
+  </div>
+
+  <!-- ═══ CONTROLS ═══ -->
+  <div class="controls">
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+    <div class="controls-row">
+      <div class="controls-left">
+        <button class="play-pause-btn" id="playPauseBtn" aria-label="Play/Pause">
+          <svg id="pauseIcon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          <svg id="playIcon" viewBox="0 0 24 24" style="display:none"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <span class="scene-counter" id="sceneCounter">1 / 7</span>
+      </div>
+      <div class="scene-dots" id="sceneDots">
+        <button class="scene-dot active" data-idx="0"></button>
+        <button class="scene-dot" data-idx="1"></button>
+        <button class="scene-dot" data-idx="2"></button>
+        <button class="scene-dot" data-idx="3"></button>
+        <button class="scene-dot" data-idx="4"></button>
+        <button class="scene-dot" data-idx="5"></button>
+        <button class="scene-dot" data-idx="6"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── State ──
+  const scenes = document.querySelectorAll('.scene');
+  const dots = document.querySelectorAll('.scene-dot');
+  const progressBar = document.getElementById('progressBar');
+  const sceneCounter = document.getElementById('sceneCounter');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const playIcon = document.getElementById('playIcon');
+
+  let currentScene = 0;
+  let isPlaying = true;
+  let sceneTimer = null;
+  let progressTimer = null;
+  let sceneStartTime = 0;
+
+  const durations = Array.from(scenes).map(s => parseInt(s.dataset.duration, 10));
+
+  // ── Particles ──
+  function createParticles() {
+    const container = document.getElementById('particles');
+    const colors = ['#10B981', '#059669', '#2563EB', '#7C3AED', '#F43F5E'];
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = (60 + Math.random() * 40) + '%';
+      p.style.animationDelay = (Math.random() * 8) + 's';
+      p.style.animationDuration = (5 + Math.random() * 5) + 's';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.width = (2 + Math.random() * 4) + 'px';
+      p.style.height = p.style.width;
+      container.appendChild(p);
+    }
+  }
+  createParticles();
+
+  // ── Confetti ──
+  function createConfetti() {
+    const container = document.getElementById('confettiContainer');
+    container.innerHTML = '';
+    const colors = ['#10B981', '#059669', '#2563EB', '#7C3AED', '#F43F5E', '#F59E0B', '#EC4899'];
+    const shapes = ['circle', 'rect'];
+    for (let i = 0; i < 60; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.animationDelay = (Math.random() * 1.5) + 's';
+      piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
+      piece.style.background = color;
+      piece.style.borderRadius = shape === 'circle' ? '50%' : '2px';
+      piece.style.width = (6 + Math.random() * 8) + 'px';
+      piece.style.height = (6 + Math.random() * 8) + 'px';
+      container.appendChild(piece);
+    }
+  }
+
+  // ── Budget bar animation ──
+  function animateBudgetBars() {
+    const bars = document.querySelectorAll('.s3-bar-fill');
+    bars.forEach((bar, i) => {
+      setTimeout(() => {
+        bar.style.width = bar.dataset.width + '%';
+      }, 600 + i * 200);
+    });
+  }
+  function resetBudgetBars() {
+    const bars = document.querySelectorAll('.s3-bar-fill');
+    bars.forEach(bar => { bar.style.width = '0%'; });
+  }
+
+  // ── Scene Management ──
+  function goToScene(idx) {
+    if (idx < 0 || idx >= scenes.length) return;
+
+    // Reset budget bars if leaving scene 2
+    if (currentScene === 2) resetBudgetBars();
+
+    scenes[currentScene].classList.remove('active');
+    dots[currentScene].classList.remove('active');
+
+    currentScene = idx;
+
+    scenes[currentScene].classList.add('active');
+    dots[currentScene].classList.add('active');
+    sceneCounter.textContent = (currentScene + 1) + ' / ' + scenes.length;
+
+    // Scene-specific triggers
+    if (currentScene === 2) {
+      setTimeout(animateBudgetBars, 300);
+    }
+    if (currentScene === 6) {
+      createConfetti();
+    }
+
+    // Hide typing indicator + AI msg for re-entry
+    if (currentScene === 4) {
+      const typing = document.getElementById('typingIndicator');
+      const aiMsg = document.querySelector('.s5-msg-ai');
+      const badge = document.querySelector('.s5-gemini-badge');
+      typing.style.display = 'flex';
+      // hide typing after AI reply appears
+      setTimeout(() => { typing.style.display = 'none'; }, 2100);
+    }
+
+    if (isPlaying) startSceneTimer();
+  }
+
+  function nextScene() {
+    if (currentScene < scenes.length - 1) {
+      goToScene(currentScene + 1);
+    } else {
+      // Loop back
+      goToScene(0);
+    }
+  }
+
+  // ── Timer ──
+  function startSceneTimer() {
+    clearTimeout(sceneTimer);
+    clearInterval(progressTimer);
+    sceneStartTime = Date.now();
+    const duration = durations[currentScene];
+
+    // Progress bar
+    progressTimer = setInterval(() => {
+      const elapsed = Date.now() - sceneStartTime;
+      const totalElapsed = durations.slice(0, currentScene).reduce((a, b) => a + b, 0) + elapsed;
+      const totalDuration = durations.reduce((a, b) => a + b, 0);
+      const pct = Math.min(100, (totalElapsed / totalDuration) * 100);
+      progressBar.style.width = pct + '%';
+    }, 50);
+
+    sceneTimer = setTimeout(() => {
+      clearInterval(progressTimer);
+      nextScene();
+    }, duration);
+  }
+
+  function togglePlayPause() {
+    isPlaying = !isPlaying;
+    if (isPlaying) {
+      pauseIcon.style.display = '';
+      playIcon.style.display = 'none';
+      startSceneTimer();
+    } else {
+      pauseIcon.style.display = 'none';
+      playIcon.style.display = '';
+      clearTimeout(sceneTimer);
+      clearInterval(progressTimer);
+    }
+  }
+
+  // ── Event Listeners ──
+  playPauseBtn.addEventListener('click', togglePlayPause);
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      goToScene(parseInt(dot.dataset.idx, 10));
+    });
+  });
+
+  // Keyboard controls
+  document.addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'k') { e.preventDefault(); togglePlayPause(); }
+    if (e.key === 'ArrowRight' || e.key === 'l') { goToScene(currentScene + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'j') { goToScene(currentScene - 1); }
+  });
+
+  // ── Start ──
+  startSceneTimer();
+})();
+</script>
+
+</body>
+</html>
