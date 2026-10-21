@@ -7,6 +7,15 @@ using System.Drawing;
 using System.Diagnostics;
 using Microsoft.Win32;
 
+[assembly: AssemblyTitle("Actual Track Setup")]
+[assembly: AssemblyDescription("Actual Track - Local-First Expense & Budget Tracker Installer")]
+[assembly: AssemblyCompany("Actual Track")]
+[assembly: AssemblyProduct("Actual Track")]
+[assembly: AssemblyCopyright("Copyright © 2026 Actual Track. All rights reserved.")]
+[assembly: AssemblyTrademark("Actual Track")]
+[assembly: AssemblyVersion("1.2.0.0")]
+[assembly: AssemblyFileVersion("1.2.0.0")]
+
 public class InstallerForm : Form
 {
     private Button btnInstall;
@@ -191,7 +200,7 @@ public class InstallerForm : Form
                     if (key != null)
                     {
                         key.SetValue("DisplayName", "Actual Track");
-                        key.SetValue("DisplayVersion", "1.1.0");
+                        key.SetValue("DisplayVersion", "1.2.0");
                         key.SetValue("Publisher", "Actual Track");
                         key.SetValue("DisplayIcon", exePath);
                         key.SetValue("InstallLocation", installDir);
