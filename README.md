@@ -23,9 +23,13 @@ A modern, privacy-first personal finance application inspired by **Actual Budget
 
 Features the luxury **"Snow & Emerald" White Theme**, zero-based envelope budgeting, interactive cashflow trends, multi-account liquidity management, AI-powered financial advisor, and an offline-first SQLite database.
 
-## 🌐 Website
+## 🌐 Website & Download
 
-📥 **[Visit the Landing Page & Download](https://your-github-username.github.io/actual-track/)** — View the demo, explore features, and download the app.
+📥 **[Visit the Live Landing Page & Download App](https://vjnaveen2005.github.io/actual-track/)**
+
+* 🎬 **[Watch Interactive SaaS Demo Video](https://vjnaveen2005.github.io/actual-track/demo-video.html)**
+* 📦 **[Download Windows Installer (v1.0.0)](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrackSetup.exe)**
+* 🗜️ **[Download Portable ZIP (v1.0.0)](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack-Windows-Portable.zip)**
 
 ---
 
@@ -160,10 +164,10 @@ lib/
 ## 📥 Download
 
 ### Windows
-| Type | File | Size |
-|------|------|------|
-| **Installer** (recommended) | [ActualTrackSetup.exe](dist/ActualTrackSetup.exe) | ~14.5 MB |
-| **Portable** (no install) | [ActualTrack-Windows-Portable.zip](dist/ActualTrack-Windows-Portable.zip) | ~14.4 MB |
+| Type | File | Direct Download | Size |
+|------|------|-----------------|------|
+| **Installer** (recommended) | `ActualTrackSetup.exe` | [Download Installer](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrackSetup.exe) | ~14.5 MB |
+| **Portable** (no install) | `ActualTrack-Windows-Portable.zip` | [Download Portable ZIP](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack-Windows-Portable.zip) | ~14.4 MB |
 
 ### Build from Source
 
