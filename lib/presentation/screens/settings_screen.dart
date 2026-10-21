@@ -306,7 +306,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Text('Settings & Preferences', style: AppTypography.heading1),
                       const SizedBox(height: 4),
                       Text(
-                        'Configure Gemini AI, voice controls, and local database settings',
+                        'Configure budgeting rules, backup options, and local database settings',
                         style: AppTypography.subtitle,
                       ),
                     ],
@@ -338,200 +338,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
             const SizedBox(height: 20),
 
-            // Section 1: Gemini AI Settings
-            _buildSectionCard(
-              title: 'Gemini AI Advisor & OpenUI',
-              subtitle: 'Connect your personal Google Gemini API key to enable conversational ledger operations, voice interaction, and live OpenUI interactive dashboards.',
-              icon: Icons.auto_awesome,
-              iconColor: AppColors.cobalt,
-              children: [
-                // API Key Row
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text('Google Gemini API Key', style: AppTypography.bodyBold),
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: hasKey ? AppColors.emeraldLight : AppColors.coralLight,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Text(
-                                  hasKey ? 'Configured' : 'Missing Key',
-                                  style: AppTypography.caption.copyWith(
-                                    color: hasKey ? AppColors.emerald : AppColors.coral,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Get your free Gemini API key from Google AI Studio (aistudio.google.com). Kept 100% private in your local device SQLite.',
-                            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _apiKeyController,
-                        obscureText: _obscureApiKey,
-                        decoration: InputDecoration(
-                          hintText: 'Enter AIzaSy... API key',
-                          hintStyle: const TextStyle(fontSize: 13, color: AppColors.textMuted),
-                          filled: true,
-                          fillColor: AppColors.surfaceSecondary,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureApiKey ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                              size: 18,
-                              color: AppColors.textMuted,
-                            ),
-                            onPressed: () => setState(() => _obscureApiKey = !_obscureApiKey),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.border),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton.icon(
-                      onPressed: _saveApiKey,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.emerald,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 0,
-                      ),
-                      icon: const Icon(Icons.save_outlined, size: 18),
-                      label: const Text('Save Key', style: TextStyle(fontWeight: FontWeight.w600)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Divider(height: 1, color: AppColors.border),
-                const SizedBox(height: 20),
-
-                // Model Selector
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('AI Model Selection', style: AppTypography.bodyBold),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Choose which Gemini intelligence model powers your conversational finance assistant.',
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceSecondary,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _availableModels.any((m) => m['id'] == provider.geminiModel)
-                              ? provider.geminiModel
-                              : _availableModels.first['id'],
-                          isExpanded: true,
-                          icon: const Icon(Icons.arrow_drop_down, color: AppColors.emerald),
-                          items: _availableModels.map((m) {
-                            return DropdownMenuItem<String>(
-                              value: m['id'],
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(m['name']!, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
-                                  Text(m['desc']!, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (val) {
-                            if (val != null) {
-                              provider.setGeminiModel(val);
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Divider(height: 1, color: AppColors.border),
-                const SizedBox(height: 20),
-
-                // Voice STT / TTS Controls
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('AI Voice & Speech Engine', style: AppTypography.bodyBold),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Enable Speech-to-Text voice dictation and natural Text-to-Speech financial responses.',
-                            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Row(
-                      children: [
-                        OutlinedButton.icon(
-                          onPressed: _isTestingVoice ? null : _testVoice,
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.cobalt,
-                            side: const BorderSide(color: AppColors.cobalt),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          ),
-                          icon: _isTestingVoice
-                              ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2))
-                              : const Icon(Icons.volume_up_rounded, size: 16),
-                          label: const Text('Test Voice', style: TextStyle(fontSize: 12)),
-                        ),
-                        const SizedBox(width: 12),
-                        Switch(
-                          value: provider.aiVoiceEnabled,
-                          activeThumbColor: Colors.white,
-                          activeTrackColor: AppColors.emerald,
-                          onChanged: (val) => provider.setAiVoiceEnabled(val),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Section 2: Budgeting & Investment Logic
+            // Section 1: Budgeting & Investment Logic
             _buildSectionCard(
               title: 'Budgeting & Ledger Logic',
               subtitle: 'Zero-based budgeting separates liquid spending cash from fluctuating off-budget investments.',
@@ -652,12 +459,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Actual Track v1.1.0 • Local-First Zero-Based Ledger',
+                    'Actual Track v1.2.0 • Local-First Zero-Based Ledger',
                     style: AppTypography.caption.copyWith(color: AppColors.textMuted),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Powered by Google Gemini 2.5 Agentic AI & OpenUI Engine',
+                    '100% Private & Offline • Zero Cloud Dependency',
                     style: AppTypography.caption.copyWith(color: AppColors.textMuted, fontSize: 11),
                   ),
                 ],

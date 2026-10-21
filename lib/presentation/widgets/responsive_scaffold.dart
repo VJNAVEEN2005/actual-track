@@ -97,15 +97,6 @@ class ResponsiveScaffold extends StatelessWidget {
               onPressed: () => nav.setIndex(8),
             ),
             IconButton(
-              tooltip: 'Gemini AI Advisor',
-              icon: Icon(
-                nav.currentIndex == 6 ? Icons.auto_awesome : Icons.auto_awesome_outlined,
-                color: nav.currentIndex == 6 ? AppColors.emerald : AppColors.textPrimary,
-                size: 22,
-              ),
-              onPressed: () => nav.setIndex(6),
-            ),
-            IconButton(
               tooltip: 'Settings',
               icon: Icon(
                 nav.currentIndex == 7 ? Icons.settings : Icons.settings_outlined,
@@ -335,15 +326,6 @@ class ResponsiveScaffold extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Divider(height: 1, color: AppColors.border),
                 const SizedBox(height: 8),
-                _sidebarItem(
-                  icon: Icons.auto_awesome_outlined,
-                  activeIcon: Icons.auto_awesome,
-                  label: 'AI Advisor',
-                  index: 6,
-                  nav: nav,
-                  isCollapsed: isCollapsed,
-                  badge: 'AI',
-                ),
                 _sidebarItem(
                   icon: Icons.sync_rounded,
                   activeIcon: Icons.sync_rounded,

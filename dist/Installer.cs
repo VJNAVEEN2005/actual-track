@@ -13,8 +13,8 @@ using Microsoft.Win32;
 [assembly: AssemblyProduct("Actual Track")]
 [assembly: AssemblyCopyright("Copyright © 2026 Actual Track. All rights reserved.")]
 [assembly: AssemblyTrademark("Actual Track")]
-[assembly: AssemblyVersion("1.2.0.0")]
-[assembly: AssemblyFileVersion("1.2.0.0")]
+[assembly: AssemblyVersion("1.2.1.0")]
+[assembly: AssemblyFileVersion("1.2.1.0")]
 
 public class InstallerForm : Form
 {

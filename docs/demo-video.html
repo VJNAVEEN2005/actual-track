@@ -169,7 +169,7 @@ body {
 
 .s1-icon {
   width: 88px; height: 88px;
-  background: linear-gradient(135deg, var(--emerald), var(--emerald-accent));
+  background: white;
   border-radius: 22px;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 28px;
@@ -177,10 +177,17 @@ body {
   opacity: 0;
   transform: translateY(30px) scale(0.8);
   transition: all 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.2s;
+  overflow: hidden;
+  border: 2px solid rgba(5,150,105,0.2);
 }
 .scene.active .s1-icon { opacity: 1; transform: translateY(0) scale(1); }
 
-.s1-icon svg { width: 44px; height: 44px; fill: white; }
+.s1-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
 
 .s1-title {
   font-family: 'Poppins', sans-serif;
@@ -497,118 +504,129 @@ body {
 .scene.active .s4-surplus-badge { opacity: 1; transform: scale(1); }
 
 /* ══════════════════════════════════════
-   SCENE 5 — AI ADVISOR
+   SCENE 5 — TWO-WAY WI-FI SYNC
    ══════════════════════════════════════ */
-.s5-content { width: 100%; max-width: 580px; }
+.s5-content { width: 100%; max-width: 620px; text-align: center; }
 
-.s5-chat-window {
+.s5-sync-card {
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow-xl);
   overflow: hidden;
   border: 1px solid rgba(0,0,0,0.06);
+  padding: 24px 28px;
 }
 
-.s5-chat-header {
-  background: linear-gradient(135deg, var(--emerald), var(--emerald-accent));
-  padding: 14px 20px;
+.s5-sync-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
   opacity: 0;
-  transition: opacity 0.5s ease 0.2s;
+  transform: translateY(10px);
+  transition: all 0.5s ease 0.2s;
 }
-.scene.active .s5-chat-header { opacity: 1; }
+.scene.active .s5-sync-header { opacity: 1; transform: translateY(0); }
 
-.s5-chat-header-icon {
-  width: 32px; height: 32px;
-  background: rgba(255,255,255,0.2);
+.s5-sync-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.s5-sync-peers {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 24px;
+}
+
+.s5-peer-box {
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  width: 180px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.4s;
+}
+.scene.active .s5-peer-box { opacity: 1; transform: scale(1); }
+
+.s5-peer-icon { font-size: 32px; margin-bottom: 6px; }
+.s5-peer-name { font-weight: 700; font-size: 14px; color: var(--text); }
+.s5-peer-sub { font-size: 11px; color: var(--text-muted); }
+
+.s5-sync-arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: all 0.5s ease 0.8s;
+}
+.scene.active .s5-sync-arrows { opacity: 1; }
+.s5-sync-pulse {
+  width: 44px; height: 44px;
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-}
-.s5-chat-header-text {
-  color: white;
-  font-weight: 600;
-  font-size: 15px;
-}
-.s5-chat-header-badge {
-  margin-left: auto;
-  background: rgba(255,255,255,0.2);
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 10px;
-  font-weight: 600;
-  color: white;
-  letter-spacing: 0.5px;
-}
-
-.s5-chat-body { padding: 20px; min-height: 260px; }
-
-.s5-msg {
-  max-width: 85%;
-  padding: 12px 16px;
-  border-radius: 16px;
-  font-size: 13px;
-  line-height: 1.55;
-  margin-bottom: 14px;
-  opacity: 0;
-  transform: translateY(15px);
-  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
-}
-.s5-msg-user {
   background: var(--emerald-light);
   color: var(--emerald);
-  font-weight: 500;
-  margin-left: auto;
-  border-bottom-right-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  animation: pulseRotate 4s infinite linear;
 }
-.scene.active .s5-msg-user { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+@keyframes pulseRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-.s5-typing {
+.s5-pin-box {
+  background: #ECFDF5;
+  border: 1px dashed var(--emerald);
+  border-radius: 12px;
+  padding: 12px 18px;
   display: flex;
-  gap: 5px;
-  padding: 14px 18px;
-  max-width: 70px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
   opacity: 0;
-  transition: opacity 0.3s ease 1.2s;
+  transform: translateY(10px);
+  transition: all 0.5s ease 1.1s;
 }
-.scene.active .s5-typing { opacity: 1; }
-.s5-typing-dot {
-  width: 8px; height: 8px;
-  background: var(--text-light);
-  border-radius: 50%;
-  animation: typingBounce 1.4s infinite;
+.scene.active .s5-pin-box { opacity: 1; transform: translateY(0); }
+
+.s5-pin-label { font-size: 12px; font-weight: 600; color: #065F46; }
+.s5-pin-digits {
+  display: flex;
+  gap: 6px;
 }
-.s5-typing-dot:nth-child(2) { animation-delay: 0.2s; }
-.s5-typing-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typingBounce {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-8px); }
+.s5-pin-digit {
+  width: 28px; height: 32px;
+  background: white;
+  border: 1.5px solid var(--emerald);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px; color: var(--emerald);
 }
 
-.s5-msg-ai {
-  background: #F1F5F9;
-  color: var(--text);
-  border-bottom-left-radius: 4px;
-}
-.scene.active .s5-msg-ai { transition-delay: 2.0s; opacity: 1; transform: translateY(0); }
-
-.s5-gemini-badge {
+.s5-sync-status {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  margin-top: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--violet);
-  background: var(--violet-light);
-  padding: 3px 10px;
+  gap: 8px;
+  padding: 8px 16px;
   border-radius: 20px;
+  background: #F1F5F9;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
   opacity: 0;
-  transition: opacity 0.4s ease 2.5s;
+  transform: translateY(10px);
+  transition: all 0.5s ease 1.5s;
 }
-.scene.active .s5-gemini-badge { opacity: 1; }
+.scene.active .s5-sync-status { opacity: 1; transform: translateY(0); }
+.s5-sync-status span { color: var(--emerald); }
 
 /* ══════════════════════════════════════
    SCENE 6 — MULTI-PLATFORM
@@ -969,7 +987,7 @@ body {
   <div class="scene active" data-scene="0" data-duration="4000">
     <div class="s1-content">
       <div class="s1-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95.49-7.4-2.96-6.93-6.93.34-2.89 2.67-5.22 5.56-5.56 3.97-.49 7.4 2.96 6.93 6.93-.34 2.89-2.67 5.22-5.56 5.56zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm2-5h-1V9h-2v2H9v2h2v2h2v-2h1v-2z"/></svg>
+        <img src="app_icon.jpg" alt="Actual Track App Icon" class="s1-icon-img" />
       </div>
       <h1 class="s1-title">Actual Track</h1>
       <p class="s1-subtitle">Local-First Expense &amp; Budget Tracker</p>
@@ -1164,28 +1182,47 @@ body {
     <div class="scene-label">Track Your Cash Flow Trajectory</div>
   </div>
 
-  <!-- ═══ SCENE 5 — AI ADVISOR ═══ -->
+  <!-- ═══ SCENE 5 — TWO-WAY WI-FI SYNC ═══ -->
   <div class="scene" data-scene="4" data-duration="5000">
     <div class="s5-content">
-      <div class="s5-chat-window">
-        <div class="s5-chat-header">
-          <div class="s5-chat-header-icon">🤖</div>
-          <div class="s5-chat-header-text">Financial Advisor AI</div>
-          <div class="s5-chat-header-badge">GEMINI</div>
+      <div class="s5-sync-card">
+        <div class="s5-sync-header">
+          <span style="font-size: 24px;">🔄</span>
+          <h3>Two-Way Local Wi-Fi Sync</h3>
         </div>
-        <div class="s5-chat-body">
-          <div class="s5-msg s5-msg-user">How can I reduce my food spending?</div>
-          <div class="s5-typing" id="typingIndicator">
-            <div class="s5-typing-dot"></div>
-            <div class="s5-typing-dot"></div>
-            <div class="s5-typing-dot"></div>
+        <div class="s5-sync-peers">
+          <div class="s5-peer-box">
+            <div class="s5-peer-icon">💻</div>
+            <div class="s5-peer-name">Windows Laptop</div>
+            <div class="s5-peer-sub">Host Server (Port 8080)</div>
           </div>
-          <div class="s5-msg s5-msg-ai">Based on your spending patterns, you're spending 23% more on dining out compared to last month. I suggest setting a weekly dining budget of ₹1,500 and cooking more at home. This could save you <strong>₹3,200/month</strong>.</div>
-          <div class="s5-gemini-badge">✨ Powered by Gemini</div>
+          <div class="s5-sync-arrows">
+            <div class="s5-sync-pulse">⇄</div>
+            <span style="font-size: 11px; font-weight: 600; color: var(--emerald);">Direct P2P</span>
+          </div>
+          <div class="s5-peer-box">
+            <div class="s5-peer-icon">📱</div>
+            <div class="s5-peer-name">Android Phone</div>
+            <div class="s5-peer-sub">Auto-Discovered Peer</div>
+          </div>
+        </div>
+        <div class="s5-pin-box">
+          <div class="s5-pin-label">🔒 Secure One-Time Pairing PIN:</div>
+          <div class="s5-pin-digits">
+            <div class="s5-pin-digit">7</div>
+            <div class="s5-pin-digit">4</div>
+            <div class="s5-pin-digit">9</div>
+            <div class="s5-pin-digit">2</div>
+            <div class="s5-pin-digit">0</div>
+            <div class="s5-pin-digit">1</div>
+          </div>
+        </div>
+        <div class="s5-sync-status">
+          <span>✔</span> 42 Records Merged &bull; 0 Duplicates &bull; 100% Private Offline
         </div>
       </div>
     </div>
-    <div class="scene-label">AI-Powered Financial Guidance</div>
+    <div class="scene-label">Two-Way Local Synchronization</div>
   </div>
 
   <!-- ═══ SCENE 6 — MULTI-PLATFORM ═══ -->
@@ -1276,8 +1313,8 @@ body {
         </button>
       </div>
       <div class="s7-logo-outro">
-        <div class="s1-icon" style="width:52px;height:52px;border-radius:14px">
-          <svg viewBox="0 0 24 24" style="width:28px;height:28px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95.49-7.4-2.96-6.93-6.93.34-2.89 2.67-5.22 5.56-5.56 3.97-.49 7.4 2.96 6.93 6.93-.34 2.89-2.67 5.22-5.56 5.56zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm2-5h-1V9h-2v2H9v2h2v2h2v-2h1v-2z"/></svg>
+        <div class="s1-icon" style="width:56px;height:56px;border-radius:14px;margin:0 auto 10px;">
+          <img src="app_icon.jpg" alt="Actual Track" class="s1-icon-img" style="border-radius:14px;" />
         </div>
         <div class="s7-logo-text">Actual Track</div>
       </div>
@@ -1411,15 +1448,7 @@ body {
       createConfetti();
     }
 
-    // Hide typing indicator + AI msg for re-entry
-    if (currentScene === 4) {
-      const typing = document.getElementById('typingIndicator');
-      const aiMsg = document.querySelector('.s5-msg-ai');
-      const badge = document.querySelector('.s5-gemini-badge');
-      typing.style.display = 'flex';
-      // hide typing after AI reply appears
-      setTimeout(() => { typing.style.display = 'none'; }, 2100);
-    }
+    // No typing indicator needed for sync scene
 
     if (isPlaying) startSceneTimer();
   }
