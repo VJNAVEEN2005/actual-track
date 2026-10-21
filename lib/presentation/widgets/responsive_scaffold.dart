@@ -548,63 +548,73 @@ class ResponsiveScaffold extends StatelessWidget {
   }
 
   Widget _buildMobileBottomBar(BuildContext context, NavigationProvider nav) {
-    return BottomAppBar(
-      color: AppColors.surface,
-      surfaceTintColor: Colors.transparent,
-      elevation: 8,
-      padding: EdgeInsets.zero,
-      notchMargin: 6,
-      shape: const CircularNotchedRectangle(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(
-            child: _bottomNavItem(
-              icon: Icons.dashboard_outlined,
-              activeIcon: Icons.dashboard_rounded,
-              label: 'Home',
-              index: 0,
-              nav: nav,
-            ),
-          ),
-          Expanded(
-            child: _bottomNavItem(
-              icon: Icons.all_inbox_outlined,
-              activeIcon: Icons.all_inbox_rounded,
-              label: 'Envelopes',
-              index: 1,
-              nav: nav,
-            ),
-          ),
-          Expanded(
-            child: _bottomNavItem(
-              icon: Icons.auto_awesome_outlined,
-              activeIcon: Icons.auto_awesome,
-              label: 'AI Advisor',
-              index: 6,
-              nav: nav,
-            ),
-          ),
-          const SizedBox(width: 44), // Gap for FAB
-          Expanded(
-            child: _bottomNavItem(
-              icon: Icons.account_balance_outlined,
-              activeIcon: Icons.account_balance_rounded,
-              label: 'Accounts',
-              index: 3,
-              nav: nav,
-            ),
-          ),
-          Expanded(
-            child: _bottomNavItem(
-              icon: Icons.receipt_long_outlined,
-              activeIcon: Icons.receipt_long_rounded,
-              label: 'Ledger',
-              index: 4,
-              nav: nav,
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        border: const Border(
+          top: BorderSide(color: AppColors.border, width: 0.8),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, -3),
           ),
         ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: BottomAppBar(
+          height: 62,
+          color: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          notchMargin: 8,
+          shape: const CircularNotchedRectangle(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: _bottomNavItem(
+                  icon: Icons.dashboard_outlined,
+                  activeIcon: Icons.dashboard_rounded,
+                  label: 'Home',
+                  index: 0,
+                  nav: nav,
+                ),
+              ),
+              Expanded(
+                child: _bottomNavItem(
+                  icon: Icons.all_inbox_outlined,
+                  activeIcon: Icons.all_inbox_rounded,
+                  label: 'Envelopes',
+                  index: 1,
+                  nav: nav,
+                ),
+              ),
+              const SizedBox(width: 52), // Balanced notch clearance for Center FAB
+              Expanded(
+                child: _bottomNavItem(
+                  icon: Icons.account_balance_wallet_outlined,
+                  activeIcon: Icons.account_balance_wallet_rounded,
+                  label: 'Accounts',
+                  index: 3,
+                  nav: nav,
+                ),
+              ),
+              Expanded(
+                child: _bottomNavItem(
+                  icon: Icons.receipt_long_outlined,
+                  activeIcon: Icons.receipt_long_rounded,
+                  label: 'Ledger',
+                  index: 4,
+                  nav: nav,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -618,26 +628,36 @@ class ResponsiveScaffold extends StatelessWidget {
   }) {
     final isSelected = nav.currentIndex == index;
 
-    return InkWell(
-      onTap: () => nav.setIndex(index),
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => nav.setIndex(index),
+        borderRadius: BorderRadius.circular(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              isSelected ? activeIcon : icon,
-              color: isSelected ? AppColors.emerald : AppColors.textMuted,
-              size: 20,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.emeraldLight : Colors.transparent,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(
+                isSelected ? activeIcon : icon,
+                color: isSelected ? AppColors.emerald : AppColors.textSecondary,
+                size: 20,
+              ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 1),
             Text(
               label,
               style: AppTypography.caption.copyWith(
                 fontSize: 10,
                 color: isSelected ? AppColors.emerald : AppColors.textMuted,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                letterSpacing: -0.1,
               ),
             ),
           ],

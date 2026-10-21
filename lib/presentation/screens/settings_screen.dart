@@ -248,54 +248,95 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<AppProvider>();
     final hasKey = provider.hasGeminiKey;
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 24 : 16,
+          vertical: isDesktop ? 24 : 16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Settings & Preferences', style: AppTypography.heading1),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Configure Gemini AI, voice controls, and local database settings',
-                      style: AppTypography.subtitle,
+            if (!isDesktop) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Settings', style: AppTypography.heading2.copyWith(fontSize: 20)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceSecondary,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.border),
                     ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceSecondary,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.shield_outlined, size: 16, color: AppColors.emerald),
-                      const SizedBox(width: 6),
-                      Text(
-                        '100% Local-First',
-                        style: AppTypography.caption.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.shield_outlined, size: 14, color: AppColors.emerald),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Local-First',
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
                         ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'AI keys, voice & local database settings',
+                style: AppTypography.caption.copyWith(color: AppColors.textMuted),
+              ),
+            ] else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Settings & Preferences', style: AppTypography.heading1),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Configure Gemini AI, voice controls, and local database settings',
+                        style: AppTypography.subtitle,
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceSecondary,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.shield_outlined, size: 16, color: AppColors.emerald),
+                        const SizedBox(width: 6),
+                        Text(
+                          '100% Local-First',
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 20),
 
             // Section 1: Gemini AI Settings
             _buildSectionCard(

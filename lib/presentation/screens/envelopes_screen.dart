@@ -15,6 +15,7 @@ class EnvelopesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<AppProvider>();
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
 
     // Group categories by groupName
     final grouped = <String, List<CategoryModel>>{};
@@ -25,66 +26,124 @@ class EnvelopesScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 24 : 16,
+          vertical: isDesktop ? 20 : 16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            if (!isDesktop) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Budget Envelopes', style: AppTypography.heading2.copyWith(fontSize: 20)),
+                        const SizedBox(height: 2),
+                        Text('Zero-based allocation', style: AppTypography.caption.copyWith(color: AppColors.textMuted)),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () => AddCategoryModal.show(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.emerald,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.add, size: 16),
+                    label: const Text('New', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: AppColors.softShadow,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Zero-Based Envelopes', style: AppTypography.heading1),
-                    const SizedBox(height: 4),
+                    Text('Free to Assign:', style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
                     Text(
-                      'Give every rupee a job before the month begins',
-                      style: AppTypography.subtitle,
+                      Formatters.currency(provider.availableToBudget),
+                      style: AppTypography.heading3.copyWith(
+                        color: AppColors.emerald,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+              ),
+            ] else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Zero-Based Envelopes', style: AppTypography.heading1),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Give every rupee a job before the month begins',
+                        style: AppTypography.subtitle,
                       ),
-                      child: Row(
-                        children: [
-                          Text('Free to Assign: ', style: AppTypography.caption),
-                          Text(
-                            Formatters.currency(provider.availableToBudget),
-                            style: AppTypography.heading3.copyWith(
-                              color: AppColors.emerald,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton.icon(
-                      onPressed: () => AddCategoryModal.show(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.emerald,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        shape: RoundedRectangleBorder(
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColors.border),
                         ),
-                        elevation: 0,
+                        child: Row(
+                          children: [
+                            Text('Free to Assign: ', style: AppTypography.caption),
+                            Text(
+                              Formatters.currency(provider.availableToBudget),
+                              style: AppTypography.heading3.copyWith(
+                                color: AppColors.emerald,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      icon: const Icon(Icons.add, size: 18),
-                      label: const Text('New Category', style: TextStyle(fontWeight: FontWeight.w600)),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        onPressed: () => AddCategoryModal.show(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.emerald,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 0,
+                        ),
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('New Category', style: TextStyle(fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 20),
 
             if (grouped.isEmpty)
               Container(
@@ -130,53 +189,60 @@ class EnvelopesScreen extends StatelessWidget {
                 ),
               )
             else
-            // Groups
-            ...grouped.entries.map((entry) {
-              final groupName = entry.key;
-              final list = entry.value;
-              final totalGroupBudget = list.fold(0.0, (sum, c) => sum + c.budgeted);
-              final totalGroupSpent = list.fold(0.0, (sum, c) => sum + c.spent);
+              // Groups
+              ...grouped.entries.map((entry) {
+                final groupName = entry.key;
+                final list = entry.value;
+                final totalGroupBudget = list.fold(0.0, (sum, c) => sum + c.budgeted);
+                final totalGroupSpent = list.fold(0.0, (sum, c) => sum + c.spent);
 
-              return Container(
-                margin: const EdgeInsets.only(bottom: 24),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.border),
-                  boxShadow: AppColors.softShadow,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(groupName, style: AppTypography.heading2.copyWith(fontSize: 18)),
-                        Text(
-                          '${Formatters.currency(totalGroupSpent)} of ${Formatters.currency(totalGroupBudget)}',
-                          style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: list.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) {
-                        final cat = list[index];
-                        return EnvelopeCard(
-                          category: cat,
-                          onEditBudget: () => EditBudgetDialog.show(context, cat),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }),
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  padding: EdgeInsets.all(isDesktop ? 20 : 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.border),
+                    boxShadow: AppColors.softShadow,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              groupName,
+                              style: AppTypography.heading2.copyWith(fontSize: isDesktop ? 18 : 16),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            '${Formatters.currency(totalGroupSpent)} of ${Formatters.currency(totalGroupBudget)}',
+                            style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600, fontSize: isDesktop ? 12 : 11),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: list.length,
+                        separatorBuilder: (context, index) => const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          final cat = list[index];
+                          return EnvelopeCard(
+                            category: cat,
+                            onEditBudget: () => EditBudgetDialog.show(context, cat),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }),
             const SizedBox(height: 40),
           ],
         ),

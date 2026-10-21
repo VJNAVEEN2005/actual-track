@@ -22,8 +22,10 @@ class MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isCompact = MediaQuery.of(context).size.width < 900;
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(isCompact ? 12 : 18),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
@@ -37,42 +39,72 @@ class MetricCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: AppTypography.subtitle),
+              Expanded(
+                child: Text(
+                  title,
+                  style: isCompact
+                      ? AppTypography.caption.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textMuted,
+                          fontSize: 11,
+                        )
+                      : AppTypography.subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 4),
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(isCompact ? 6 : 8),
                 decoration: BoxDecoration(
                   color: accentColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: accentColor, size: 18),
+                child: Icon(icon, color: accentColor, size: isCompact ? 15 : 18),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(value, style: AppTypography.currencyMedium),
-          const SizedBox(height: 8),
+          SizedBox(height: isCompact ? 6 : 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              style: isCompact
+                  ? AppTypography.currencyMedium.copyWith(fontSize: 17)
+                  : AppTypography.currencyMedium,
+            ),
+          ),
+          SizedBox(height: isCompact ? 4 : 8),
           if (badgeText != null)
             Row(
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: (badgeColor ?? accentColor).withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    badgeText!,
-                    style: AppTypography.caption.copyWith(
-                      color: badgeColor ?? accentColor,
-                      fontWeight: FontWeight.w700,
+                Flexible(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isCompact ? 6 : 8,
+                      vertical: isCompact ? 2 : 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: (badgeColor ?? accentColor).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      badgeText!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.caption.copyWith(
+                        color: badgeColor ?? accentColor,
+                        fontWeight: FontWeight.w700,
+                        fontSize: isCompact ? 9.5 : 11,
+                      ),
                     ),
                   ),
                 ),
               ],
             )
           else
-            const SizedBox(height: 20),
+            SizedBox(height: isCompact ? 12 : 20),
         ],
       ),
     );

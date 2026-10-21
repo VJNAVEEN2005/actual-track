@@ -29,17 +29,20 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 24 : 16,
+          vertical: isDesktop ? 20 : 16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Top Header Bar
             _buildHeader(context),
-            const SizedBox(height: 24),
+            SizedBox(height: isDesktop ? 24 : 16),
 
             // Top Metric Cards Row (4 cards)
             _buildMetricCards(context, provider),
-            const SizedBox(height: 28),
+            SizedBox(height: isDesktop ? 28 : 20),
 
             // Accounts Carousel Row
             Row(
@@ -157,6 +160,56 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 900;
+
+    if (!isDesktop) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Financial Overview', style: AppTypography.heading2.copyWith(fontSize: 20)),
+                const SizedBox(height: 2),
+                Text(
+                  'Zero-based budget & ledger',
+                  style: AppTypography.caption.copyWith(color: AppColors.textMuted, fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () => context.read<NavigationProvider>().setIndex(8),
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: AppColors.emeraldLight,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.emerald.withValues(alpha: 0.3)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.sync_rounded, color: AppColors.emerald, size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Wi-Fi Sync',
+                    style: AppTypography.caption.copyWith(
+                      color: AppColors.emerald,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -274,29 +327,21 @@ class DashboardScreen extends StatelessWidget {
                 ))
             .toList(),
       );
-    } else if (isTablet) {
+    } else {
       return GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 2.1,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: isTablet ? 1.8 : 1.35,
         children: cards,
-      );
-    } else {
-      return Column(
-        children: cards
-            .map((c) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: c,
-                ))
-            .toList(),
       );
     }
   }
 
   Widget _buildCashFlowChartCard(BuildContext context, AppProvider provider) {
+    final isDesktop = MediaQuery.of(context).size.width >= 900;
     final inflows = provider.cumulativeWeeklyInflow;
     final outflows = provider.cumulativeWeeklyOutflow;
 
@@ -322,46 +367,80 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Cumulative Cash Flow', style: AppTypography.heading3),
-                  const SizedBox(height: 2),
-                  Text('Income vs. Expenses trajectory across weeks',
-                      style: AppTypography.caption.copyWith(color: AppColors.textMuted)),
-                ],
-              ),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: isSurplus ? AppColors.emeraldLight : AppColors.coralLight,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: (isSurplus ? AppColors.emerald : AppColors.coral).withValues(alpha: 0.3),
-                      ),
-                    ),
-                    child: Text(
-                      '${isSurplus ? "+" : ""}${Formatters.currency(netFlow)} Net',
-                      style: TextStyle(
-                        color: isSurplus ? AppColors.emerald : AppColors.coral,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                      ),
+          if (!isDesktop) ...[
+            Text('Cumulative Cash Flow', style: AppTypography.heading3.copyWith(fontSize: 16)),
+            const SizedBox(height: 2),
+            Text('Income vs. Expenses trajectory',
+                style: AppTypography.caption.copyWith(color: AppColors.textMuted, fontSize: 11)),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: isSurplus ? AppColors.emeraldLight : AppColors.coralLight,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: (isSurplus ? AppColors.emerald : AppColors.coral).withValues(alpha: 0.3),
                     ),
                   ),
-                  const SizedBox(width: 14),
-                  _chartLegend('Inflow', AppColors.emerald),
-                  const SizedBox(width: 12),
-                  _chartLegend('Outflow', AppColors.coral),
-                ],
-              ),
-            ],
-          ),
+                  child: Text(
+                    '${isSurplus ? "+" : ""}${Formatters.currency(netFlow)} Net',
+                    style: TextStyle(
+                      color: isSurplus ? AppColors.emerald : AppColors.coral,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                _chartLegend('Inflow', AppColors.emerald),
+                const SizedBox(width: 10),
+                _chartLegend('Outflow', AppColors.coral),
+              ],
+            ),
+          ] else ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Cumulative Cash Flow', style: AppTypography.heading3),
+                    const SizedBox(height: 2),
+                    Text('Income vs. Expenses trajectory across weeks',
+                        style: AppTypography.caption.copyWith(color: AppColors.textMuted)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isSurplus ? AppColors.emeraldLight : AppColors.coralLight,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: (isSurplus ? AppColors.emerald : AppColors.coral).withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Text(
+                        '${isSurplus ? "+" : ""}${Formatters.currency(netFlow)} Net',
+                        style: TextStyle(
+                          color: isSurplus ? AppColors.emerald : AppColors.coral,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    _chartLegend('Inflow', AppColors.emerald),
+                    const SizedBox(width: 12),
+                    _chartLegend('Outflow', AppColors.coral),
+                  ],
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: 24),
           SizedBox(
             height: 200,
@@ -446,7 +525,9 @@ class DashboardScreen extends StatelessWidget {
                       showTitles: true,
                       reservedSize: 24,
                       getTitlesWidget: (value, meta) {
-                        const days = ['W1 (1-7)', 'W2 (8-14)', 'W3 (15-21)', 'W4 (22-28)', 'W5 (29+)'];
+                        final days = isDesktop
+                            ? const ['W1 (1-7)', 'W2 (8-14)', 'W3 (15-21)', 'W4 (22-28)', 'W5 (29+)']
+                            : const ['W1', 'W2', 'W3', 'W4', 'W5'];
                         final idx = value.toInt();
                         if (idx >= 0 && idx < days.length) {
                           return Padding(

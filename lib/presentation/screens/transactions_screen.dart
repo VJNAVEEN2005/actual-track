@@ -12,49 +12,83 @@ class TransactionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<AppProvider>();
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
     final transactions = provider.filteredTransactions;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 24 : 16,
+          vertical: isDesktop ? 20 : 16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Transactions Ledger', style: AppTypography.heading1),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Search, filter and reconcile your financial movements',
-                      style: AppTypography.subtitle,
+            if (!isDesktop) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Ledger', style: AppTypography.heading2.copyWith(fontSize: 20)),
+                        const SizedBox(height: 2),
+                        Text('Filter & reconcile movements', style: AppTypography.caption.copyWith(color: AppColors.textMuted)),
+                      ],
                     ),
-                  ],
-                ),
-                ElevatedButton.icon(
-                  onPressed: () => AddTransactionModal.show(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.emerald,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
                   ),
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('New Entry'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: () => AddTransactionModal.show(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.emerald,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.add, size: 16),
+                    label: const Text('New', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  ),
+                ],
+              ),
+            ] else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Transactions Ledger', style: AppTypography.heading1),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Search, filter and reconcile your financial movements',
+                        style: AppTypography.subtitle,
+                      ),
+                    ],
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () => AddTransactionModal.show(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.emerald,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.add, size: 18),
+                    label: const Text('New Entry'),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 16),
 
             // Search Bar & Filters
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(isDesktop ? 16 : 12),
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(16),
@@ -67,18 +101,18 @@ class TransactionsScreen extends StatelessWidget {
                   TextField(
                     onChanged: (val) => provider.setSearchQuery(val),
                     decoration: InputDecoration(
-                      hintText: 'Search by payee, description, or notes...',
-                      prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
+                      hintText: 'Search by payee, note, or amount...',
+                      prefixIcon: const Icon(Icons.search, color: AppColors.textMuted, size: 20),
                       filled: true,
                       fillColor: AppColors.surfaceSecondary,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   // Filter Chips
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -137,7 +171,7 @@ class TransactionsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             // Transactions List
             Row(
@@ -145,16 +179,16 @@ class TransactionsScreen extends StatelessWidget {
               children: [
                 Text(
                   '${transactions.length} Transactions Found',
-                  style: AppTypography.heading3.copyWith(fontSize: 15),
+                  style: AppTypography.heading3.copyWith(fontSize: 14),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             if (transactions.isEmpty)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 60),
+                padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
@@ -162,11 +196,11 @@ class TransactionsScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const Icon(Icons.receipt_long_outlined, size: 48, color: AppColors.textMuted),
+                    const Icon(Icons.receipt_long_outlined, size: 44, color: AppColors.textMuted),
                     const SizedBox(height: 12),
-                    Text('No transactions match your criteria', style: AppTypography.heading3),
+                    Text('No transactions match', style: AppTypography.heading3.copyWith(fontSize: 15)),
                     const SizedBox(height: 4),
-                    Text('Try adjusting your search or category filter', style: AppTypography.subtitle),
+                    Text('Try adjusting your search or category filter', style: AppTypography.caption.copyWith(color: AppColors.textMuted)),
                   ],
                 ),
               )

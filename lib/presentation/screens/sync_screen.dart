@@ -39,30 +39,34 @@ class _SyncScreenState extends State<SyncScreen> {
   @override
   Widget build(BuildContext context) {
     final syncEngine = context.watch<SyncEngine>();
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 24 : 16,
+          vertical: isDesktop ? 20 : 16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context, syncEngine),
-            const SizedBox(height: 20),
+            _buildHeader(context, syncEngine, isDesktop),
+            const SizedBox(height: 18),
 
             // Incoming Pairing Request Card (Shown when another device wants to pair with this one)
             if (syncEngine.currentPendingPin != null) ...[
               _buildIncomingPairingCard(context, syncEngine),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
             ],
 
             // Current Device Status Card
-            _buildThisDeviceCard(context, syncEngine),
-            const SizedBox(height: 24),
+            _buildThisDeviceCard(context, syncEngine, isDesktop),
+            const SizedBox(height: 20),
 
             // Discovered Devices Section
             _buildDiscoveredDevicesSection(context, syncEngine),
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
 
             // Sync History Section
             _buildHistorySection(context),
@@ -73,7 +77,81 @@ class _SyncScreenState extends State<SyncScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, SyncEngine syncEngine) {
+  Widget _buildHeader(BuildContext context, SyncEngine syncEngine, bool isDesktop) {
+    if (!isDesktop) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Wi-Fi Sync', style: AppTypography.heading2.copyWith(fontSize: 20)),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: syncEngine.isServerRunning
+                          ? AppColors.emeraldLight
+                          : AppColors.surfaceSecondary,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: syncEngine.isServerRunning
+                            ? AppColors.emerald.withValues(alpha: 0.3)
+                            : AppColors.border,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: syncEngine.isServerRunning
+                                ? AppColors.emerald
+                                : AppColors.textMuted,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          syncEngine.isServerRunning ? 'Listening' : 'Offline',
+                          style: TextStyle(
+                            color: syncEngine.isServerRunning
+                                ? AppColors.emerald
+                                : AppColors.textMuted,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 10.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  IconButton(
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    tooltip: 'Scan',
+                    onPressed: () {
+                      syncEngine.broadcastPresence();
+                    },
+                    icon: const Icon(Icons.refresh_rounded, color: AppColors.emerald),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            'Sync laptop & phone peer-to-peer on LAN',
+            style: AppTypography.caption.copyWith(color: AppColors.textMuted),
+          ),
+        ],
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -246,9 +324,9 @@ class _SyncScreenState extends State<SyncScreen> {
     );
   }
 
-  Widget _buildThisDeviceCard(BuildContext context, SyncEngine syncEngine) {
+  Widget _buildThisDeviceCard(BuildContext context, SyncEngine syncEngine, bool isDesktop) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(isDesktop ? 20 : 14),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
@@ -258,7 +336,7 @@ class _SyncScreenState extends State<SyncScreen> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(isDesktop ? 12 : 10),
             decoration: BoxDecoration(
               color: AppColors.emeraldLight,
               borderRadius: BorderRadius.circular(12),
@@ -268,48 +346,71 @@ class _SyncScreenState extends State<SyncScreen> {
                   ? Icons.phone_android_rounded
                   : Icons.laptop_mac_rounded,
               color: AppColors.emerald,
-              size: 26,
+              size: isDesktop ? 26 : 22,
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Text(syncEngine.deviceName, style: AppTypography.heading3.copyWith(fontSize: 16)),
-                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        syncEngine.deviceName,
+                        style: AppTypography.heading3.copyWith(fontSize: isDesktop ? 16 : 14.5),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
                     InkWell(
                       onTap: () => _showEditDeviceNameDialog(context, syncEngine),
                       borderRadius: BorderRadius.circular(6),
                       child: const Padding(
-                        padding: EdgeInsets.all(4),
-                        child: Icon(Icons.edit_outlined, size: 16, color: AppColors.textMuted),
+                        padding: EdgeInsets.all(3),
+                        child: Icon(Icons.edit_outlined, size: 15, color: AppColors.textMuted),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
-                  'IP: ${syncEngine.localIp ?? 'Determining...'} • Port: ${SyncEngine.httpPort} • Platform: ${syncEngine.platform.toUpperCase()}',
-                  style: AppTypography.caption.copyWith(color: AppColors.textMuted),
+                  isDesktop
+                      ? 'IP: ${syncEngine.localIp ?? 'Determining...'} • Port: ${SyncEngine.httpPort} • ${syncEngine.platform.toUpperCase()}'
+                      : '${syncEngine.localIp ?? 'Determining...'} • Port: ${SyncEngine.httpPort}',
+                  style: AppTypography.caption.copyWith(color: AppColors.textMuted, fontSize: 11),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          ElevatedButton.icon(
-            onPressed: () => _showManualConnectDialog(context, syncEngine),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.surfaceSecondary,
-              foregroundColor: AppColors.textPrimary,
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          const SizedBox(width: 8),
+          if (isDesktop)
+            ElevatedButton.icon(
+              onPressed: () => _showManualConnectDialog(context, syncEngine),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.surfaceSecondary,
+                foregroundColor: AppColors.textPrimary,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: const Icon(Icons.link_rounded, size: 16),
+              label: const Text('Connect by IP', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+            )
+          else
+            IconButton(
+              tooltip: 'Connect by IP',
+              onPressed: () => _showManualConnectDialog(context, syncEngine),
+              icon: const Icon(Icons.link_rounded, color: AppColors.emerald, size: 22),
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.surfaceSecondary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
             ),
-            icon: const Icon(Icons.link_rounded, size: 16),
-            label: const Text('Connect by IP', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-          ),
         ],
       ),
     );
@@ -324,26 +425,35 @@ class _SyncScreenState extends State<SyncScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Text('Discovered Devices on Wi-Fi', style: AppTypography.heading3),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppColors.emeraldLight,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '${devices.length} found',
-                    style: AppTypography.caption.copyWith(
-                      color: AppColors.emerald,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11,
+            Expanded(
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      'Discovered Devices',
+                      style: AppTypography.heading3.copyWith(fontSize: 16),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppColors.emeraldLight,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '${devices.length}',
+                      style: AppTypography.caption.copyWith(
+                        color: AppColors.emerald,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             TextButton.icon(
               onPressed: () {

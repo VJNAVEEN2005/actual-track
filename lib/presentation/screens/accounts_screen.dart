@@ -20,7 +20,7 @@ class AccountsScreen extends StatelessWidget {
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            width: 400,
+            constraints: const BoxConstraints(maxWidth: 420),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: AppColors.surface,
@@ -91,30 +91,29 @@ class AccountsScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
+                      child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 12),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         final name = nameController.text.trim();
                         final bal = double.tryParse(balanceController.text.trim()) ?? 0.0;
                         if (name.isNotEmpty) {
-                          context.read<AppProvider>().addAccount(
+                          await context.read<AppProvider>().addAccount(
                                 name: name,
                                 type: selectedType,
                                 balance: bal,
-                                colorValue: Colors.blueAccent.toARGB32(),
-                                iconCode: Icons.account_balance_wallet_outlined.codePoint,
+                                colorValue: 0xFF059669,
+                                iconCode: 0xe040,
                               );
-                          Navigator.of(context).pop();
+                          if (context.mounted) Navigator.of(context).pop();
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.emerald,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         elevation: 0,
                       ),
                       child: const Text('Create Account'),
@@ -132,138 +131,164 @@ class AccountsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<AppProvider>();
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 24 : 16,
+          vertical: isDesktop ? 20 : 16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Linked Accounts', style: AppTypography.heading1),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Manage on-budget and off-budget accounts',
-                      style: AppTypography.subtitle,
+            if (!isDesktop) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Linked Accounts', style: AppTypography.heading2.copyWith(fontSize: 20)),
+                        const SizedBox(height: 2),
+                        Text('Manage on & off-budget funds', style: AppTypography.caption.copyWith(color: AppColors.textMuted)),
+                      ],
                     ),
-                  ],
-                ),
-                ElevatedButton.icon(
-                  onPressed: () => _showAddAccountDialog(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.emerald,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
                   ),
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('New Account'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () => _showAddAccountDialog(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.emerald,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.add, size: 16),
+                    label: const Text('New', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  ),
+                ],
+              ),
+            ] else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Linked Accounts', style: AppTypography.heading1),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Manage on-budget and off-budget accounts',
+                        style: AppTypography.subtitle,
+                      ),
+                    ],
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () => _showAddAccountDialog(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.emerald,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.add, size: 18),
+                    label: const Text('New Account'),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 18),
 
             // Liquidity & Net Worth Banner Cards
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(isDesktop ? 20 : 16),
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
                 boxShadow: AppColors.softShadow,
               ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      // Liquid Spendable Cash
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.account_balance_wallet_outlined, size: 16, color: AppColors.emerald),
-                                const SizedBox(width: 6),
-                                Text('Liquid Spendable Cash', style: AppTypography.caption.copyWith(fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              Formatters.currency(provider.liquidNetWorth),
-                              style: AppTypography.currencyMedium.copyWith(color: AppColors.emerald),
-                            ),
-                            const SizedBox(height: 2),
-                            Text('Checking, Savings & Wallets', style: AppTypography.caption.copyWith(fontSize: 10, color: AppColors.textMuted)),
-                          ],
+              child: isDesktop
+                  ? Row(
+                      children: [
+                        // Liquid Spendable Cash
+                        Expanded(
+                          child: _liquidityColumn(
+                            icon: Icons.account_balance_wallet_outlined,
+                            iconColor: AppColors.emerald,
+                            title: 'Liquid Spendable Cash',
+                            value: Formatters.currency(provider.liquidNetWorth),
+                            valueColor: AppColors.emerald,
+                            subtitle: 'Checking, Savings & Wallets',
+                          ),
                         ),
-                      ),
-                      Container(width: 1, height: 48, color: AppColors.border),
-                      const SizedBox(width: 16),
-                      // Off-Budget Investments
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.trending_up_rounded, size: 16, color: AppColors.purple),
-                                const SizedBox(width: 6),
-                                Text('Investments (Off-Budget)', style: AppTypography.caption.copyWith(fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              Formatters.currency(provider.totalInvestments),
-                              style: AppTypography.currencyMedium.copyWith(color: AppColors.purple),
-                            ),
-                            const SizedBox(height: 2),
-                            Text('Stocks, Groww, Zerodha, Crypto', style: AppTypography.caption.copyWith(fontSize: 10, color: AppColors.textMuted)),
-                          ],
+                        Container(width: 1, height: 48, color: AppColors.border),
+                        const SizedBox(width: 16),
+                        // Off-Budget Investments
+                        Expanded(
+                          child: _liquidityColumn(
+                            icon: Icons.trending_up_rounded,
+                            iconColor: AppColors.purple,
+                            title: 'Investments (Off-Budget)',
+                            value: Formatters.currency(provider.totalInvestments),
+                            valueColor: AppColors.purple,
+                            subtitle: 'Stocks, Groww, Zerodha, Crypto',
+                          ),
                         ),
-                      ),
-                      if (MediaQuery.of(context).size.width >= 700) ...[
                         Container(width: 1, height: 48, color: AppColors.border),
                         const SizedBox(width: 16),
                         // Total Combined
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.pie_chart_outline_rounded, size: 16, color: AppColors.cobalt),
-                                  const SizedBox(width: 6),
-                                  Text('Combined Net Worth', style: AppTypography.caption.copyWith(fontWeight: FontWeight.w700)),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                Formatters.currency(provider.totalNetWorth),
-                                style: AppTypography.currencyMedium.copyWith(color: AppColors.textPrimary),
-                              ),
-                              const SizedBox(height: 2),
-                              Text('${provider.accounts.length} active accounts', style: AppTypography.caption.copyWith(fontSize: 10, color: AppColors.textMuted)),
-                            ],
+                          child: _liquidityColumn(
+                            icon: Icons.pie_chart_outline_rounded,
+                            iconColor: AppColors.cobalt,
+                            title: 'Combined Net Worth',
+                            value: Formatters.currency(provider.totalNetWorth),
+                            valueColor: AppColors.textPrimary,
+                            subtitle: '${provider.accounts.length} active accounts',
                           ),
                         ),
                       ],
-                    ],
-                  ),
-                ],
-              ),
+                    )
+                  : Column(
+                      children: [
+                        _liquidityRow(
+                          icon: Icons.account_balance_wallet_outlined,
+                          iconColor: AppColors.emerald,
+                          title: 'Liquid Spendable Cash',
+                          value: Formatters.currency(provider.liquidNetWorth),
+                          valueColor: AppColors.emerald,
+                          subtitle: 'Checking, Savings & Wallets',
+                        ),
+                        const Divider(height: 20, color: AppColors.border),
+                        _liquidityRow(
+                          icon: Icons.trending_up_rounded,
+                          iconColor: AppColors.purple,
+                          title: 'Investments (Off-Budget)',
+                          value: Formatters.currency(provider.totalInvestments),
+                          valueColor: AppColors.purple,
+                          subtitle: 'Stocks, Mutual Funds, Crypto',
+                        ),
+                        const Divider(height: 20, color: AppColors.border),
+                        _liquidityRow(
+                          icon: Icons.pie_chart_outline_rounded,
+                          iconColor: AppColors.cobalt,
+                          title: 'Total Combined Net Worth',
+                          value: Formatters.currency(provider.totalNetWorth),
+                          valueColor: AppColors.textPrimary,
+                          subtitle: '${provider.accounts.length} active accounts',
+                        ),
+                      ],
+                    ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 14),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: AppColors.cobaltLight.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(12),
@@ -271,15 +296,15 @@ class AccountsScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline_rounded, size: 18, color: AppColors.cobalt),
+                  const Icon(Icons.info_outline_rounded, size: 16, color: AppColors.cobalt),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Tap any account to reconcile balances or update fluctuating investment values (Zerodha, Groww, Crypto).',
+                      'Tap any account to reconcile balances or update fluctuating values.',
                       style: AppTypography.caption.copyWith(
                         color: AppColors.cobalt,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12,
+                        fontSize: 11.5,
                       ),
                     ),
                   ),
@@ -288,7 +313,7 @@ class AccountsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
 
-            // Accounts Grid
+            // Accounts Grid / List
             if (provider.accounts.isEmpty)
               Container(
                 width: double.infinity,
@@ -333,17 +358,101 @@ class AccountsScreen extends StatelessWidget {
                 ),
               )
             else
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: provider.accounts.map((acc) {
-                  return AccountCard(account: acc);
-                }).toList(),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: provider.accounts.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  return AccountCard(account: provider.accounts[index]);
+                },
               ),
             const SizedBox(height: 40),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _liquidityColumn({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String value,
+    required Color valueColor,
+    required String subtitle,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 16, color: iconColor),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                title,
+                style: AppTypography.caption.copyWith(fontWeight: FontWeight.w700),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: AppTypography.currencyMedium.copyWith(color: valueColor),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          subtitle,
+          style: AppTypography.caption.copyWith(fontSize: 10, color: AppColors.textMuted),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
+  Widget _liquidityRow({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String value,
+    required Color valueColor,
+    required String subtitle,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, size: 14, color: iconColor),
+                  const SizedBox(width: 6),
+                  Text(
+                    title,
+                    style: AppTypography.caption.copyWith(fontWeight: FontWeight.w700, fontSize: 11),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: AppTypography.caption.copyWith(fontSize: 10, color: AppColors.textMuted),
+              ),
+            ],
+          ),
+        ),
+        Text(
+          value,
+          style: AppTypography.currencyMedium.copyWith(color: valueColor, fontSize: 16),
+        ),
+      ],
     );
   }
 }
