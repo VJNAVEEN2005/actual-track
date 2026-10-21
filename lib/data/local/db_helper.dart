@@ -35,7 +35,7 @@ class DbHelper {
 
     final db = await openDatabase(
       dbPath,
-      version: 4,
+      version: 5,
       onCreate: _createDB,
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 3) {
@@ -44,25 +44,79 @@ class DbHelper {
           await db.execute('DROP TABLE IF EXISTS categories');
           await db.execute('DROP TABLE IF EXISTS accounts');
           await _createDB(db, newVersion);
-        } else if (oldVersion < 4) {
-          await db.execute('''
-            CREATE TABLE IF NOT EXISTS app_settings (
-              key TEXT PRIMARY KEY,
-              value TEXT NOT NULL
-            )
-          ''');
+        } else {
+          if (oldVersion < 4) {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS app_settings (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+              )
+            ''');
+          }
+          if (oldVersion < 5) {
+            await _upgradeToVersion5(db);
+          }
         }
       },
     );
 
+    await _ensureTables(db);
+    return db;
+  }
+
+  Future<void> _upgradeToVersion5(Database db) async {
+    try {
+      await db.execute('ALTER TABLE accounts ADD COLUMN updatedAt TEXT');
+    } catch (_) {}
+    try {
+      await db.execute('ALTER TABLE categories ADD COLUMN updatedAt TEXT');
+    } catch (_) {}
+    try {
+      await db.execute('ALTER TABLE transactions ADD COLUMN updatedAt TEXT');
+    } catch (_) {}
+    try {
+      await db.execute('ALTER TABLE schedules ADD COLUMN updatedAt TEXT');
+    } catch (_) {}
+
+    await _createSyncTables(db);
+  }
+
+  Future<void> _createSyncTables(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS sync_tombstones (
+        id TEXT NOT NULL,
+        entityType TEXT NOT NULL,
+        deletedAt TEXT NOT NULL,
+        PRIMARY KEY (id, entityType)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS sync_history (
+        id TEXT PRIMARY KEY,
+        timestamp TEXT NOT NULL,
+        peerDeviceName TEXT NOT NULL,
+        peerDeviceId TEXT NOT NULL,
+        direction TEXT NOT NULL,
+        accountsSynced INTEGER NOT NULL,
+        categoriesSynced INTEGER NOT NULL,
+        transactionsSynced INTEGER NOT NULL,
+        schedulesSynced INTEGER NOT NULL,
+        deletedItemsSynced INTEGER NOT NULL,
+        status TEXT NOT NULL,
+        summary TEXT NOT NULL
+      )
+    ''');
+  }
+
+  Future<void> _ensureTables(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS app_settings (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
       )
     ''');
-
-    return db;
+    await _createSyncTables(db);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -74,7 +128,8 @@ class DbHelper {
         balance REAL NOT NULL,
         colorValue INTEGER NOT NULL,
         iconCode INTEGER NOT NULL,
-        isOffBudget INTEGER NOT NULL
+        isOffBudget INTEGER NOT NULL,
+        updatedAt TEXT
       )
     ''');
 
@@ -86,7 +141,8 @@ class DbHelper {
         budgeted REAL NOT NULL,
         spent REAL NOT NULL,
         colorValue INTEGER NOT NULL,
-        iconCode INTEGER NOT NULL
+        iconCode INTEGER NOT NULL,
+        updatedAt TEXT
       )
     ''');
 
@@ -101,6 +157,7 @@ class DbHelper {
         notes TEXT,
         isIncome INTEGER NOT NULL,
         isCleared INTEGER NOT NULL DEFAULT 1,
+        updatedAt TEXT,
         FOREIGN KEY (accountId) REFERENCES accounts (id) ON DELETE CASCADE,
         FOREIGN KEY (categoryId) REFERENCES categories (id) ON DELETE SET NULL
       )
@@ -117,16 +174,20 @@ class DbHelper {
         frequency TEXT NOT NULL,
         isIncome INTEGER NOT NULL,
         isPaid INTEGER NOT NULL DEFAULT 0,
+        updatedAt TEXT,
         FOREIGN KEY (accountId) REFERENCES accounts (id) ON DELETE CASCADE,
         FOREIGN KEY (categoryId) REFERENCES categories (id) ON DELETE SET NULL
       )
     ''');
+
     await db.execute('''
       CREATE TABLE IF NOT EXISTS app_settings (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
       )
     ''');
+
+    await _createSyncTables(db);
   }
 
   Future<String?> getSetting(String key) async {

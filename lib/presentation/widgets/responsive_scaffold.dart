@@ -14,6 +14,7 @@ import '../screens/calendar_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/envelopes_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/sync_screen.dart';
 import '../screens/transactions_screen.dart';
 import 'add_transaction_modal.dart';
 
@@ -29,6 +30,7 @@ class ResponsiveScaffold extends StatelessWidget {
     AnalyticsScreen(),     // 5
     AiAdvisorScreen(),     // 6
     SettingsScreen(),      // 7
+    SyncScreen(),          // 8
   ];
 
   @override
@@ -56,27 +58,44 @@ class ResponsiveScaffold extends StatelessWidget {
           backgroundColor: AppColors.surface,
           elevation: 0,
           scrolledUnderElevation: 1,
+          titleSpacing: 12,
           title: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: Image.asset(
                   'assets/app_icon.jpg',
-                  width: 26,
-                  height: 26,
+                  width: 24,
+                  height: 24,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => const Icon(
                     Icons.account_balance_wallet,
                     color: AppColors.emerald,
-                    size: 22,
+                    size: 20,
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              Text('Actual Track', style: AppTypography.heading3.copyWith(fontSize: 16)),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  'Actual Track',
+                  style: AppTypography.heading3.copyWith(fontSize: 15),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ],
           ),
           actions: [
+            IconButton(
+              tooltip: 'Wi-Fi Sync',
+              icon: Icon(
+                nav.currentIndex == 8 ? Icons.sync_rounded : Icons.sync_rounded,
+                color: nav.currentIndex == 8 ? AppColors.emerald : AppColors.textPrimary,
+                size: 22,
+              ),
+              onPressed: () => nav.setIndex(8),
+            ),
             IconButton(
               tooltip: 'Gemini AI Advisor',
               icon: Icon(
@@ -324,6 +343,15 @@ class ResponsiveScaffold extends StatelessWidget {
                   nav: nav,
                   isCollapsed: isCollapsed,
                   badge: 'AI',
+                ),
+                _sidebarItem(
+                  icon: Icons.sync_rounded,
+                  activeIcon: Icons.sync_rounded,
+                  label: 'Wi-Fi Sync',
+                  index: 8,
+                  nav: nav,
+                  isCollapsed: isCollapsed,
+                  badge: 'P2P',
                 ),
                 _sidebarItem(
                   icon: Icons.settings_outlined,

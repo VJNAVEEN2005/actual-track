@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'core/sync/sync_engine.dart';
 import 'core/theme/app_theme.dart';
 import 'data/local/db_helper.dart';
 import 'presentation/widgets/responsive_scaffold.dart';
@@ -38,6 +39,7 @@ class ActualExpenseApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(create: (_) => AppProvider()..init()),
+        ChangeNotifierProvider.value(value: SyncEngine.instance..init()),
       ],
       child: MaterialApp(
         title: 'Actual Track - Expense & Budget',

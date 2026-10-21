@@ -8,8 +8,9 @@ class ScheduleModel {
   final String frequency; // 'monthly', 'weekly', 'yearly', 'bi-weekly'
   final bool isIncome;
   final bool isPaid;
+  final DateTime updatedAt;
 
-  const ScheduleModel({
+  ScheduleModel({
     required this.id,
     required this.name,
     required this.amount,
@@ -19,7 +20,8 @@ class ScheduleModel {
     required this.frequency,
     this.isIncome = false,
     this.isPaid = false,
-  });
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {
@@ -32,6 +34,7 @@ class ScheduleModel {
       'frequency': frequency,
       'isIncome': isIncome ? 1 : 0,
       'isPaid': isPaid ? 1 : 0,
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -46,6 +49,9 @@ class ScheduleModel {
       frequency: map['frequency'] as String,
       isIncome: (map['isIncome'] as int) == 1,
       isPaid: (map['isPaid'] as int) == 1,
+      updatedAt: map['updatedAt'] != null 
+          ? DateTime.tryParse(map['updatedAt'] as String) 
+          : null,
     );
   }
 
@@ -59,6 +65,7 @@ class ScheduleModel {
     String? frequency,
     bool? isIncome,
     bool? isPaid,
+    DateTime? updatedAt,
   }) {
     return ScheduleModel(
       id: id ?? this.id,
@@ -70,6 +77,7 @@ class ScheduleModel {
       frequency: frequency ?? this.frequency,
       isIncome: isIncome ?? this.isIncome,
       isPaid: isPaid ?? this.isPaid,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

@@ -6,8 +6,9 @@ class AccountModel {
   final int colorValue;
   final int iconCode;
   final bool isOffBudget;
+  final DateTime updatedAt;
 
-  const AccountModel({
+  AccountModel({
     required this.id,
     required this.name,
     required this.type,
@@ -15,7 +16,8 @@ class AccountModel {
     required this.colorValue,
     required this.iconCode,
     this.isOffBudget = false,
-  });
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,6 +28,7 @@ class AccountModel {
       'colorValue': colorValue,
       'iconCode': iconCode,
       'isOffBudget': isOffBudget ? 1 : 0,
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -38,6 +41,9 @@ class AccountModel {
       colorValue: map['colorValue'] as int,
       iconCode: map['iconCode'] as int,
       isOffBudget: (map['isOffBudget'] as int) == 1,
+      updatedAt: map['updatedAt'] != null 
+          ? DateTime.tryParse(map['updatedAt'] as String) 
+          : null,
     );
   }
 
@@ -49,6 +55,7 @@ class AccountModel {
     int? colorValue,
     int? iconCode,
     bool? isOffBudget,
+    DateTime? updatedAt,
   }) {
     return AccountModel(
       id: id ?? this.id,
@@ -58,6 +65,7 @@ class AccountModel {
       colorValue: colorValue ?? this.colorValue,
       iconCode: iconCode ?? this.iconCode,
       isOffBudget: isOffBudget ?? this.isOffBudget,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

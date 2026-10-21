@@ -173,34 +173,31 @@ class DashboardScreen extends StatelessWidget {
         ),
         Row(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.emeraldLight,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.emerald.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 7,
-                    height: 7,
-                    decoration: const BoxDecoration(
-                      color: AppColors.emerald,
-                      shape: BoxShape.circle,
+            InkWell(
+              onTap: () => context.read<NavigationProvider>().setIndex(8),
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.emeraldLight,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppColors.emerald.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.sync_rounded, color: AppColors.emerald, size: 14),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Wi-Fi Sync • SQLite',
+                      style: AppTypography.caption.copyWith(
+                        color: AppColors.emerald,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 11,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    'Local SQLite • Synced',
-                    style: AppTypography.caption.copyWith(
-                      color: AppColors.emerald,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(width: 12),

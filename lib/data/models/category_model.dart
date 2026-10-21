@@ -6,8 +6,9 @@ class CategoryModel {
   final double spent;
   final int colorValue;
   final int iconCode;
+  final DateTime updatedAt;
 
-  const CategoryModel({
+  CategoryModel({
     required this.id,
     required this.groupName,
     required this.name,
@@ -15,7 +16,8 @@ class CategoryModel {
     this.spent = 0.0,
     required this.colorValue,
     required this.iconCode,
-  });
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? DateTime.now();
 
   double get remaining => budgeted - spent;
   double get progressRatio => budgeted > 0 ? (spent / budgeted).clamp(0.0, 1.0) : 0.0;
@@ -30,6 +32,7 @@ class CategoryModel {
       'spent': spent,
       'colorValue': colorValue,
       'iconCode': iconCode,
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -42,6 +45,9 @@ class CategoryModel {
       spent: (map['spent'] as num?)?.toDouble() ?? 0.0,
       colorValue: map['colorValue'] as int,
       iconCode: map['iconCode'] as int,
+      updatedAt: map['updatedAt'] != null 
+          ? DateTime.tryParse(map['updatedAt'] as String) 
+          : null,
     );
   }
 
@@ -53,6 +59,7 @@ class CategoryModel {
     double? spent,
     int? colorValue,
     int? iconCode,
+    DateTime? updatedAt,
   }) {
     return CategoryModel(
       id: id ?? this.id,
@@ -62,6 +69,7 @@ class CategoryModel {
       spent: spent ?? this.spent,
       colorValue: colorValue ?? this.colorValue,
       iconCode: iconCode ?? this.iconCode,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

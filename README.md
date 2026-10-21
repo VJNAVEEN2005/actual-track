@@ -12,7 +12,10 @@
   <a href="#-download">
     <img src="https://img.shields.io/badge/Download-Windows-059669?style=for-the-badge&logo=windows&logoColor=white" alt="Download for Windows" />
   </a>
-  <img src="https://img.shields.io/badge/version-1.0.0-2563EB?style=for-the-badge" alt="Version 1.0.0" />
+  <a href="#-download">
+    <img src="https://img.shields.io/badge/Download-Android%20APK-0284c7?style=for-the-badge&logo=android&logoColor=white" alt="Download for Android" />
+  </a>
+  <img src="https://img.shields.io/badge/version-1.1.0-2563EB?style=for-the-badge" alt="Version 1.1.0" />
   <img src="https://img.shields.io/badge/Flutter-3.35+-02569B?style=for-the-badge&logo=flutter" alt="Flutter" />
   <img src="https://img.shields.io/badge/License-MIT-7C3AED?style=for-the-badge" alt="MIT License" />
 </p>
@@ -21,15 +24,27 @@
 
 A modern, privacy-first personal finance application inspired by **Actual Budget**, built with **Flutter** for **Desktop (Windows / macOS / Linux)**, **Mobile (Android / iOS)**, and **Web**.
 
-Features the luxury **"Snow & Emerald" White Theme**, zero-based envelope budgeting, interactive cashflow trends, multi-account liquidity management, AI-powered financial advisor, and an offline-first SQLite database.
+Features the luxury **"Snow & Emerald" White Theme**, zero-based envelope budgeting, interactive cashflow trends, multi-account liquidity management, AI-powered financial advisor, offline-first SQLite database, and **secure peer-to-peer Wi-Fi sync between phone & laptop with 6-digit PIN verification**.
 
 ## 🌐 Website & Download
 
 📥 **[Visit the Live Landing Page & Download App](https://vjnaveen2005.github.io/actual-track/)**
 
 * 🎬 **[Watch Interactive SaaS Demo Video](https://vjnaveen2005.github.io/actual-track/demo-video.html)**
-* 📦 **[Download Windows Installer (v1.0.0)](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrackSetup.exe)**
-* 🗜️ **[Download Portable ZIP (v1.0.0)](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack-Windows-Portable.zip)**
+* 📱 **[Download Android APK (v1.1.0)](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack.apk)** (58.3 MB · Android 8.0+)
+* 📦 **[Download Windows Installer (v1.1.0)](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrackSetup.exe)** (14.5 MB · Windows 10+)
+* 🗜️ **[Download Portable ZIP (v1.1.0)](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack-Windows-Portable.zip)** (14.4 MB · Portable)
+
+---
+
+## ✨ Key Features
+
+### 1. 🔄 Local Wi-Fi Two-Way Peer Sync (Phone ↔ Laptop)
+- **Zero Cloud / Local Network**: Discovers devices on the same Wi-Fi using UDP broadcast and embedded local HTTP server.
+- **6-Digit Key Verification**: When initiating sync from your phone to your laptop, the laptop generates a secure 6-digit PIN that must be entered on your phone before sync starts.
+- **Bi-Directional Deduplication**: Seamlessly syncs accounts, categories, transactions, and schedules back and forth with timestamp-based conflict resolution. No duplicate records.
+- **Tombstone Deletion Sync**: Deleting a transaction, category, or account on your laptop removes it on your phone once synced, and vice-versa.
+- **Sync History Ledger**: Keeps an auditable chronological history of all sync exchanges with item counts, peer names, and timestamps.
 
 ---
 
@@ -110,12 +125,13 @@ lib/
 ├── core/
 │   ├── openui/         # OpenUI generative widget system for AI chat
 │   ├── services/       # Gemini AI Service, Voice Service (TTS/STT)
+│   ├── sync/           # Peer-to-Peer Wi-Fi Sync Engine, Models & Verification
 │   ├── theme/          # AppColors ("Snow & Emerald"), Typography, ThemeData
 │   └── utils/          # Currency & Date Formatters
 ├── data/
-│   ├── local/          # SQLite DbHelper (FFI + Mobile), Sample Seed Data
+│   ├── local/          # SQLite DbHelper (FFI + Mobile), Migration & Tombstones
 │   ├── models/         # Account, Category Envelope, Schedule, Transaction models
-│   └── repositories/   # SQLite CRUD & Atomic Transaction management
+│   └── repositories/   # SQLite CRUD, Atomic Transactions & Bi-directional Sync Merging
 ├── providers/
 │   ├── app_provider.dart        # Financial state, KPI derivations, envelope math
 │   └── navigation_provider.dart # Responsive navigation & sidebar toggle state
@@ -128,6 +144,7 @@ lib/
     │   ├── analytics_screen.dart     # Donut chart & category outflow
     │   ├── calendar_screen.dart      # Financial calendar & schedules
     │   ├── ai_advisor_screen.dart    # Gemini AI chat interface
+    │   ├── sync_screen.dart          # Local Wi-Fi P2P Device Sync & History
     │   └── settings_screen.dart      # App configuration
     └── widgets/
         ├── responsive_scaffold.dart     # Adaptive Desktop/Mobile layout
@@ -163,11 +180,12 @@ lib/
 
 ## 📥 Download
 
-### Windows
-| Type | File | Direct Download | Size |
-|------|------|-----------------|------|
-| **Installer** (recommended) | `ActualTrackSetup.exe` | [Download Installer](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrackSetup.exe) | ~14.5 MB |
-| **Portable** (no install) | `ActualTrack-Windows-Portable.zip` | [Download Portable ZIP](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack-Windows-Portable.zip) | ~14.4 MB |
+### Available Downloads
+| Platform | Type | File | Direct Download | Size | Compatibility |
+|----------|------|------|-----------------|------|---------------|
+| 📱 **Android** | **Release APK** | `ActualTrack.apk` | [Download Android APK](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack.apk) | ~58.3 MB | Android 8.0+ |
+| 🪟 **Windows** | **Installer** (recommended) | `ActualTrackSetup.exe` | [Download Installer](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrackSetup.exe) | ~14.5 MB | Windows 10/11 |
+| 🪟 **Windows** | **Portable** (no install) | `ActualTrack-Windows-Portable.zip` | [Download Portable ZIP](https://vjnaveen2005.github.io/actual-track/downloads/ActualTrack-Windows-Portable.zip) | ~14.4 MB | Windows 10/11 |
 
 ### Build from Source
 

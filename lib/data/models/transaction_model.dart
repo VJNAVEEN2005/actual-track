@@ -8,8 +8,9 @@ class TransactionModel {
   final String? notes;
   final bool isIncome;
   final bool isCleared; // Actual Budget reconciliation state
+  final DateTime updatedAt;
 
-  const TransactionModel({
+  TransactionModel({
     required this.id,
     required this.date,
     required this.payee,
@@ -19,7 +20,8 @@ class TransactionModel {
     this.notes,
     this.isIncome = false,
     this.isCleared = true,
-  });
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? date;
 
   Map<String, dynamic> toMap() {
     return {
@@ -32,6 +34,7 @@ class TransactionModel {
       'notes': notes,
       'isIncome': isIncome ? 1 : 0,
       'isCleared': isCleared ? 1 : 0,
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -46,6 +49,9 @@ class TransactionModel {
       notes: map['notes'] as String?,
       isIncome: (map['isIncome'] as int) == 1,
       isCleared: (map['isCleared'] as int?) == 1 || map['isCleared'] == null,
+      updatedAt: map['updatedAt'] != null 
+          ? DateTime.tryParse(map['updatedAt'] as String) 
+          : null,
     );
   }
 
@@ -59,6 +65,7 @@ class TransactionModel {
     String? notes,
     bool? isIncome,
     bool? isCleared,
+    DateTime? updatedAt,
   }) {
     return TransactionModel(
       id: id ?? this.id,
@@ -70,6 +77,7 @@ class TransactionModel {
       notes: notes ?? this.notes,
       isIncome: isIncome ?? this.isIncome,
       isCleared: isCleared ?? this.isCleared,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
